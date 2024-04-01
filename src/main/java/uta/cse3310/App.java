@@ -64,15 +64,13 @@ public class App extends WebSocketServer {
 
   // All games currently underway on this server are stored in
   // the vector ActiveGames
-  private Vector<Game> ActiveGames = new Vector<Game>();
+  //private Vector<Game> ActiveGames = new Vector<Game>();
 
   private int GameId = 1;
 
   private int connectionId = 0;
 
   private Instant startTime;
-
-  private Statistics stats;
 
   public App(int port) {
     super(new InetSocketAddress(port));
@@ -88,15 +86,15 @@ public class App extends WebSocketServer {
 
   @Override
   public void onOpen(WebSocket conn, ClientHandshake handshake) {
-
+/* 
     connectionId++;
 
     System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
 
-    ServerEvent E = new ServerEvent();
+    ServerEvent E = new ServerEvent(); */
 
     // search for a game needing a player
-    Game G = null;
+    /*Game G = null;
     for (Game i : ActiveGames) {
       if (i.Players == uta.cse3310.PlayerType.XPLAYER) {
         G = i;
@@ -146,20 +144,20 @@ public class App extends WebSocketServer {
     System.out
         .println("< " + Duration.between(startTime, Instant.now()).toMillis() + " " + "*" + " " + escape(jsonString));
     broadcast(jsonString);
-
+ */
   }
 
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-    System.out.println(conn + " has closed");
+/*     System.out.println(conn + " has closed");
     // Retrieve the game tied to the websocket connection
     Game G = conn.getAttachment();
-    G = null;
+    G = null; */
   }
 
-  @Override
+   @Override
   public void onMessage(WebSocket conn, String message) {
-    System.out
+    /*System.out
         .println("< " + Duration.between(startTime, Instant.now()).toMillis() + " " + "-" + " " + escape(message));
 
     // Bring in the data from the webpage
@@ -169,7 +167,7 @@ public class App extends WebSocketServer {
     UserEvent U = gson.fromJson(message, UserEvent.class);
 
     // Update the running time
-    stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
+    //stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
 
     // Get our Game Object
     Game G = conn.getAttachment();
@@ -182,7 +180,7 @@ public class App extends WebSocketServer {
 
     System.out
         .println("> " + Duration.between(startTime, Instant.now()).toMillis() + " " + "*" + " " + escape(jsonString));
-    broadcast(jsonString);
+    broadcast(jsonString); */
   }
 
   @Override
@@ -202,7 +200,7 @@ public class App extends WebSocketServer {
   @Override
   public void onStart() {
     setConnectionLostTimeout(0);
-    stats = new Statistics();
+    //stats = new Statistics();
     startTime = Instant.now();
   }
 

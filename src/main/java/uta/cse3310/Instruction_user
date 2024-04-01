@@ -1,0 +1,10 @@
+package uta.cse3310;
+
+public class Instruction_user{
+    public String Instructions;
+    public int Game_Id;
+
+    public void instruction_display(){
+        
+    }
+}
