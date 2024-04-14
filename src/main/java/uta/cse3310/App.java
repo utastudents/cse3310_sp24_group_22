@@ -219,22 +219,32 @@ public class App extends WebSocketServer {
     }
     return retval;
   }
-
   public static void main(String[] args) {
 
-    // Set up the http server
+    String HttpPort = System.getenv("HTTP_PORT");
     int port = 9022;
-    HttpServer H = new HttpServer(port,"./html");
+    if (HttpPort!=null) {
+      port = Integer.valueOf(HttpPort);
+    }
+
+    // Set up the http server
+
+    HttpServer H = new HttpServer(port, "./html");
     H.start();
     System.out.println("http Server started on port: " + port);
 
     // create and start the websocket server
 
-    int Socket_port = 9122;
-    App A = new App(Socket_port);
+    port = 9122;
+    String WSPort = System.getenv("WEBSOCKET_PORT");
+    if (WSPort!=null) {
+      port = Integer.valueOf(WSPort);
+    }
+
+    App A = new App(port);
     A.setReuseAddr(true);
     A.start();
-    System.out.println("websocket Server started on port: " + Socket_port);
+    System.out.println("websocket Server started on port: " + port);
 
   }
 }
