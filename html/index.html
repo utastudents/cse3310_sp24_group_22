@@ -3,20 +3,26 @@
 <head>
     <title>TWSG Lobby</title>
 </head>
+
 <body>
-    <h1>TWSG Lobby</h1>
-    <form>
+	
+    <form id = "Lobby">
+    	<h1>TWSG Lobby</h1>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" placeholder="Enter your username">
+        <input type="button" id="enter_Game" name="Join" onclick=join() value="Join">
         
         <br><br>
-        <label for="game-type">Select Game Type:</label>
-        <input type="radio" id="game-type-2" name="game-type" value="2 Players" checked>
-        <label for="game-type-2">2 Players</label>
-        <input type="radio" id="game-type-3" name="game-type" value="3 Players">
-        <label for="game-type-3">3 Players</label>
-        <input type="radio" id="game-type-4" name="game-type" value="4 Players">
-        <label for="game-type-4">4 Players</label>
+        <div id = "Game states" style="display: none;">
+		    <label for="game-type" >Select Game Type:</label>
+		    <input type="radio" id="game-type-2" name="game-type" value="2 Players">
+		    <label for="game-type-2">2 Players</label>
+		    <input type="radio" id="game-type-3" name="game-type" value="3 Players">
+		    <label for="game-type-3">3 Players</label>
+		    <input type="radio" id="game-type-4" name="game-type" value="4 Players">
+		    <label for="game-type-4">4 Players</label>
+        
+        
         <br><br>
          
         <label for="ready">Select status:</label>
@@ -26,6 +32,7 @@
 
         <input type="radio" id="not_ready" name="game-status" value="not_ready">            
         <label for="not_ready">Not ready to play yet!</label>
+        </div>
         <br><br>
              
         <div id="waiting-area-2">
@@ -64,5 +71,74 @@
             </table>
         </div>
     </form>
+    
+    <div id = "Game_interface" style="display: none;">
+    	<h1>Game<h1>
+    	<table id="Grid">
+    	
+    	</table>
+    </div>
 </body>
 </html>
+
+<script>
+	var connection = null;
+	var serverUrl;
+	serverUrl = "ws://" + window.location.hostname + ":9880";
+	// Create the connection with the server
+	connection = new WebSocket(serverUrl);
+
+	connection.onopen = function (evt) {
+	    console.log("open");
+	}
+	connection.onclose = function (evt) {
+	    console.log("close");
+	    document.getElementById("topMessage").innerHTML = "Server Offline"
+	}
+		
+	function join() {
+		var username = document.getElementById("username").value;
+		if(username.trim() !== "") {
+		    // Show the hidden buttons
+		    document.getElementById("Game states").style.display = "inline-block";
+		} else {
+		    alert("Please enter a username before joining.");
+		}
+	}
+	
+</script>
+
+<script>	
+	var buttonTable = document.getElementById("Grid");
+	var number = 1;
+	for (var i = 1; i <= 50; i++) 
+	{
+		var row = buttonTable.insertRow();
+		for (var j = 1; j <= 50; j++)
+		{
+			var cell = row.insertCell();
+			var button = document.createElement("button");
+			button.textContent = "?";
+			button.id = number;
+			
+		    button.style.border = "none";
+		    button.style.backgroundColor = "transparent";
+		    button.style.boxShadow = "none";
+		    //button.style.padding = "0";
+		    button.style.margin = "0";
+		    button.style.outline = "none";
+		    button.style.cursor = "pointer";
+		    //button.style.width = "30px";
+		    //button.style.height = "30px";
+		    button.style.fontSize = "10px";
+		    button.style.lineHeight = "0";
+		    
+			cell.appendChild(button);	
+			number+=1;	
+		}
+		
+
+	}
+
+</script>
+
