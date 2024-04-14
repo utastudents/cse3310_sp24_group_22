@@ -5,6 +5,9 @@ public class Board_Create {
     public int Min_Letters;
     public String Handle;
 
+    Board_Create(){
+        
+    }
     public int create_grid(){
         return 1;
     }

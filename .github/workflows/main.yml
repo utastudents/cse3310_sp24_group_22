@@ -1,4 +1,6 @@
 # Derived from an example provided by https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
+#                                     https://github.blog/2015-06-16-read-only-deploy-keys/
+#
 #
 #
 #
@@ -12,49 +14,61 @@ jobs:
     steps:
       - name: configure SSH
         run: |
+          # These are very useful for debugging
+          echo "Repository = ${{ github.repository }}"
+          echo "github url = ${{ github.server_url }}"
+          echo "Owner =  ${{ github.repository_owner }}"
+          echo "Repository name = ${{ github.event.repository.name }}"
+          echo "Service name = ${{ vars.service_name }}"
+          echo "http port = ${{ vars.http_port }}"
+          echo "websocket port = ${{ vars.websocket_port }}"
+          echo "version = $${ github.sha }}"
+          # On to the work at hand.
           mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/production.key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/production.key
           chmod 600 ~/.ssh/production.key
           cat >>~/.ssh/config <<END
           Host production
-            HostName $SSH_HOST
-            User $SSH_USER
+            HostName ${{ secrets.SSH_HOST }}
+            User ${{ secrets.SSH_USER }}
             IdentityFile ~/.ssh/production.key
             StrictHostKeyChecking no
           END
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-
+                         
       - name: get source code and compile
         run: |
-          ssh production "rm -rf ./TicTacToe"
-          ssh production "git clone https://github.com/BudDavis/TicTacToe"
-          ssh production "cd TicTacToe;mvn clean compile package"
+          echo "deleting the directory ${{ github.event.repository.name }} "
+          ssh production "rm -rf  ${{ github.event.repository.name }}"
+          echo "cloning  ${{ github.server_url }}/${{ github.repository }}"
+          ssh production "git clone ${{ github.server_url }}/${{ github.repository }}"
+          ssh production "cd  ${{ github.event.repository.name }};mvn clean compile package"
         
       - name: create systemd unit file
         run: |
-           # without enable-linger, you must be logged in??
+           # without enable-linger, you must be logged in. So, we enable it.
            ssh production "loginctl enable-linger"
-           ssh production "mkdir --parents /home/sp24_group1/.config/systemd/user"
-           ssh production "rm -f /home/sp24_group1/.config/systemd/user/tictactoe.service"
-           ssh production 'echo "[Unit]" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "Description=tictactoe" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "[Service]" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "Type=simple" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "Restart=always" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "RestartSec=5" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "ExecStart=mvn exec:java -Dexec.mainClass=uta.cse3310.App" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "WorkingDirectory=/home/sp24_group1/TicTacToe" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "[Install]" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
-           ssh production 'echo "WantedBy=default.target" >>/home/sp24_group1/.config/systemd/user/tictactoe.service'
+           ssh production "mkdir --parents .config/systemd/user"
+           ssh production "rm -f .config/systemd/user/${{ vars.service_name }}.service"
+           ssh production 'echo "[Unit]" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "Description=${{ vars.service_name }}" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "[Service]" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "Type=simple" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "Restart=always" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "RestartSec=5" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "Environment=VERSION=\"${{ github.sha }}\"" >>.config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "Environment=WEBSOCKET_PORT=${{ vars.websocket_port }}" >>.config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "Environment=HTTP_PORT=${{ vars.http_port }}" >>.config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "ExecStart=mvn exec:java -Dexec.mainClass=com.cse3310.App" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "WorkingDirectory=$PWD/${{ github.event.repository.name }}" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "[Install]" >>.config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "WantedBy=default.target" >>.config/systemd/user/${{ vars.service_name }}.service'
       - name: systemd reload
         run: |
             ssh production "systemctl --user daemon-reload"
            
       - name: restart daemon
         run: |
-           ssh production "systemctl --user enable tictactoe.service"
-           ssh production "systemctl --user restart tictactoe.service"
-           ssh production "systemctl --user status tictactoe.service"
+           ssh production "systemctl --user enable  ${{ vars.service_name }}"
+           ssh production "systemctl --user restart ${{ vars.service_name }}"
+           ssh production "systemctl --user status  ${{ vars.service_name }}"
+           

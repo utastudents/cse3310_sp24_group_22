@@ -86,16 +86,17 @@ public class App extends WebSocketServer {
 
   @Override
   public void onOpen(WebSocket conn, ClientHandshake handshake) {
-/* 
+ 
     connectionId++;
 
     System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
 
-    ServerEvent E = new ServerEvent(); */
+    User E = new User();
 
+    Lobby L = null;
     // search for a game needing a player
-    /*Game G = null;
-    for (Game i : ActiveGames) {
+    Board_Create G = null;
+    /*for (Game i : ActiveGames) {
       if (i.Players == uta.cse3310.PlayerType.XPLAYER) {
         G = i;
         System.out.println("found a match");
@@ -104,7 +105,7 @@ public class App extends WebSocketServer {
 
     // No matches ? Create a new Game.
     if (G == null) {
-      G = new Game(stats);
+      G = new Board_Create();
       G.GameId = GameId;
       GameId++;
       // Add the first player
