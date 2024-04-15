@@ -111,6 +111,7 @@
 <script>	
 	var buttonTable = document.getElementById("Grid");
 	var number = 1;
+	
 	for (var i = 1; i <= 50; i++) 
 	{
 		var row = buttonTable.insertRow();
@@ -141,4 +142,94 @@
 	}
 
 </script>
+
+<script>
+
+	var no_clicks = 0;
+	var selected_letters = [];
+
+	function button_click(row, column) 
+	{
+		selected_letters.push({ row: row, column: column });
+		no_clicks += 1;
+		
+		if (no_clicks % 2 === 0) 
+		{
+		    var selected_word = isValidOrientation(selected_letters[selected_letters.length - 2], selected_letters[selected_letters.length - 1]);
+		    
+		    if (selected_word.length !== 0) 
+		    {
+		        connection.send(JSON.stringify(selected_word));
+		    } 
+		    
+		    else 
+		    {
+		        selected_letters = [];
+		    }
+		}
+	}
+	
+	function isValidOrientation(letter1, letter2) 
+	{
+		var selected_word = [];
+		const rowDiff = Math.abs(letter1.row - letter2.row);
+		const colDiff = Math.abs(letter1.column - letter2.column);
+
+		if (letter1.column === letter2.column) 
+		{
+		    // Vertical orientation
+		    for (var i = Math.min(letter1.row, letter2.row); i <= Math.max(letter1.row, letter2.row); i++) 
+		    {
+		        selected_word.push(grid[i][letter1.column]);
+		    }
+		    return selected_word;
+		} 
+		
+		else if (letter1.row === letter2.row) 
+		{
+		    // Horizontal orientation
+		    for (var i = Math.min(letter1.column, letter2.column); i <= Math.max(letter1.column, letter2.column); i++) 
+		    {
+		        selected_word.push(grid[letter1.row][i]);
+		    }
+		    
+		    return selected_word;
+		} 
+		
+		else if (rowDiff === colDiff) 
+		{
+		    // Diagonal orientation
+		    var rowStart = Math.min(letter1.row, letter2.row);
+		    var colStart = Math.min(letter1.column, letter2.column);
+		    var rowEnd = Math.max(letter1.row, letter2.row);
+		    var colEnd = Math.max(letter1.column, letter2.column);
+		    
+		    // Traverse the diagonal
+		    for (var row = rowStart, col = colStart; row <= rowEnd && col <= colEnd; row++, col++) 
+		    {
+		        selected_word.push(grid[row][col]);
+		    }
+		    return selected_word;
+		} 
+		else 
+		{
+		    return []; // Invalid orientation
+		}
+	}
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
 
