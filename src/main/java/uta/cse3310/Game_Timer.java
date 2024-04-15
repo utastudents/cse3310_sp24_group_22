@@ -50,6 +50,24 @@ public class Game_Timer {
     // Method to declare the winner with the highest score
     private void declareWinner() {
         // Add code here to declare the winner with the highest score
-        System.out.println("The winner is the player with the highest score: " + playerScore);
+        int highestScore = 0;
+        String winnerName = "";
+
+        // Loop through all players and find the player with the highest score
+        for (String player : players) {
+            int score = getPlayerScore(player);
+            if (score > highestScore) {
+                highestScore = score;
+                winnerName = player;
+            }
+        }
+
+        // Print the winner with the highest score
+        System.out.println("The winner is " + winnerName + " with a score of " + highestScore);
+    }
+
+    public static void main(String[] args) {
+        Game_Timer timer = new Game_Timer(60, 10); // 60 seconds, player score: 10
+        timer.start();
     }
 }
