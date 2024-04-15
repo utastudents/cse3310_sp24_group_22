@@ -1,13 +1,14 @@
+package uta.cse3310;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Timer {
+public class Game_Timer {
     private Timer timer;
     private int secondsRemaining;
     private boolean isGameEnded;
     private int playerScore;
 
-    public Timer(int seconds, int playerScore) {
+    public Game_Timer(int seconds, int playerScore) {
         this.secondsRemaining = seconds;
         this.timer = new Timer();
         this.isGameEnded = false;
@@ -50,10 +51,5 @@ public class Timer {
     private void declareWinner() {
         // Add code here to declare the winner with the highest score
         System.out.println("The winner is the player with the highest score: " + playerScore);
-    }
-
-    public static void main(String[] args) {
-        Timer timer = new Timer(60, 10); // 60 seconds, player score: 10
-        timer.start();
     }
 }
