@@ -18,6 +18,8 @@ public class Board_Game {
    private int level; // 1 for easy, 2 for medium, 3 for hard
    private Timer timer;
    private long startTime;
+   private Color_Picker colorPicker;
+   private List<String> playerColors;
    private Board_Create board ;
 
 
@@ -28,6 +30,11 @@ public class Board_Game {
        this.level = level;
        this.timer = new Timer();
        this.board = board;
+       colorPicker = new Color_Picker();
+        playerColors = new ArrayList<>();
+        for (int i = 0; i < playerCount; i++) {
+            playerColors.add(colorPicker.assignColor());
+        }
    }
 
 
