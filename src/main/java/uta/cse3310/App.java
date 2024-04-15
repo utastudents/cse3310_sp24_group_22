@@ -64,13 +64,14 @@ public class App extends WebSocketServer {
 
   // All games currently underway on this server are stored in
   // the vector ActiveGames
-  //private Vector<Game> ActiveGames = new Vector<Game>();
+  private Vector<Game> ActiveGames = new Vector<Game>();
 
   private int GameId = 1;
 
   private int connectionId = 0;
 
   private Instant startTime;
+  private int gamesinProgress = ActiveGames.size();
 
   public App(int port) {
     super(new InetSocketAddress(port));
@@ -84,82 +85,103 @@ public class App extends WebSocketServer {
     super(new InetSocketAddress(port), Collections.<Draft>singletonList(draft));
   }
 
-  @Override
-  public void onOpen(WebSocket conn, ClientHandshake handshake) {
- 
-    connectionId++;
+    @Override
+    public void onOpen(WebSocket conn, ClientHandshake handshake) {
+        System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
+        ServerEvent event = new ServerEvent();
 
-    System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
+        // Parse the request from the client
+        String request = handshake.getResourceDescriptor();
+        int numPlayers = Integer.parseInt(request.substring(1)); // Assuming request is "/2", "/3", or "/4"
 
-    User E = new User();
+        // Search for a game with the desired number of players
+        Game game = null;
+        for (Game g : activeGames) {
+            if (g.getNumPlayers() == numPlayers) {
+                game = g;
+                System.out.println("Found a match");
+                break;
+            }
+        }
 
-    Lobby L = null;
-    // search for a game needing a player
-    Board_Create G = null;
-    /*for (Game i : ActiveGames) {
-      if (i.Players == uta.cse3310.PlayerType.XPLAYER) {
-        G = i;
-        System.out.println("found a match");
-      }
+        // If no matches found, create a new game
+        if (game == null) {
+            game = new Game();
+            game.setGameId(GameId++);
+            activeGames.add(game);
+            game.setGamesInProgress(gamesInProgress);
+            game.setNumPlayers(numPlayers); // Set the number of players for the new game
+            System.out.println("Creating a new game for " + numPlayers + " players");
+        }
+
+        // Add the player to the game
+        game.addPlayer();
+        System.out.println("Player added to the game");
+
+        // If enough players have joined, start the game
+        if (game.getNumPlayers() == numPlayers) {
+            game.StartGame();
+            System.out.println("Game started");
+            gamesInProgress++;
+            for (Game g : activeGames) {
+                g.setGamesInProgress(gamesInProgress);
+                String jsonString = new Gson().toJson(g);
+                System.out.println(jsonString);
+                broadcast(jsonString);
+            }
+        }
+
+        // Send game details to the player who just joined
+        event.setYouAre(game.getPlayers().get(game.getNumPlayers() - 1)); // Set the player's type
+        event.setGameId(game.getGameId());
+        conn.setAttachment(game);
+
+        Gson gson = new Gson();
+        conn.send(gson.toJson(event));
+
+        // Send the state of the game to everyone
+        for (Game g : activeGames) {
+            g.setTotal(total);
+            String jsonString = gson.toJson(g);
+            System.out.println(jsonString);
+            broadcast(jsonString);
+        }
     }
 
-    // No matches ? Create a new Game.
-    if (G == null) {
-      G = new Board_Create();
-      G.GameId = GameId;
-      GameId++;
-      // Add the first player
-      G.Players = PlayerType.XPLAYER;
-      ActiveGames.add(G);
-      System.out.println(" creating a new Game");
-    } else {
-      // join an existing game
-      System.out.println(" not a new game");
-      G.Players = PlayerType.OPLAYER;
-      G.StartGame();
-    }
-
-    // create an event to go to only the new player
-    E.YouAre = G.Players;
-    E.GameId = G.GameId;
-
-    // allows the websocket to give us the Game when a message arrives..
-    // it stores a pointer to G, and will give that pointer back to us
-    // when we ask for it
-    conn.setAttachment(G);
-
-    Gson gson = new Gson();
-
-    // Note only send to the single connection
-    String jsonString = gson.toJson(E);
-    conn.send(jsonString);
-    System.out
-        .println("> " + Duration.between(startTime, Instant.now()).toMillis() + " " + connectionId + " "
-            + escape(jsonString));
-
-    // Update the running time
-    stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
-
-    // The state of the game has changed, so lets send it to everyone
-    jsonString = gson.toJson(G);
-    System.out
-        .println("< " + Duration.between(startTime, Instant.now()).toMillis() + " " + "*" + " " + escape(jsonString));
-    broadcast(jsonString);
- */
-  }
+}
 
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-/*     System.out.println(conn + " has closed");
+    System.out.println(conn + " has closed");
     // Retrieve the game tied to the websocket connection
     Game G = conn.getAttachment();
-    G = null; */
-  }
+    GsonBuilder builder = new GsonBuilder();
+    Gson gson = builder.create();
+
+    
+    ActiveGames.removeElement(G);
+    gamesinProgress-=1;
+    if (gamesinProgress <0)
+    {
+        gamesinProgress = 0;
+    }
+    for (Game i : ActiveGames)
+    {
+      i.gamesinProgress = gamesinProgress;
+     
+      String jsonString;
+      jsonString = gson.toJson(i);
+
+      System.out.println(jsonString);
+      broadcast(jsonString);
+    }
+    G =null;
+    
+    }
 
    @Override
   public void onMessage(WebSocket conn, String message) {
-    /*System.out
-        .println("< " + Duration.between(startTime, Instant.now()).toMillis() + " " + "-" + " " + escape(message));
+    System.out.println("< " + Duration.between(startTime, Instant.now()).toMillis() + " " + "-" + " " + escape(message));
 
     // Bring in the data from the webpage
     // A UserEvent is all that is allowed at this point
@@ -181,7 +203,7 @@ public class App extends WebSocketServer {
 
     System.out
         .println("> " + Duration.between(startTime, Instant.now()).toMillis() + " " + "*" + " " + escape(jsonString));
-    broadcast(jsonString); */
+    broadcast(jsonString); 
   }
 
   @Override
