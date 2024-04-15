@@ -1,17 +1,46 @@
 package uta.cse3310;
 
-public class Leaderboard {
-    public int Score;
-    public int Wins;
-    public String Handle;
 
-    public int update_leaderbaord(){
-        return 1;
-    }
-    public int add_player(){
-        return 1;
-    }
-    public int remove_player(){
-        return 1;
-    }
+import java.util.*;
+
+
+public class Leaderboard {
+   private Map<String, Player_Data> players = new HashMap<>();
+
+
+   public boolean addPlayer(String handle) {
+       if (players.containsKey(handle)) {
+           return false; // player already exists
+       }
+
+
+       players.put(handle, new Player_Data(handle));
+       return true;
+   }
+
+
+   public Player_Data getPlayer(String handle) {
+       return players.get(handle);
+   }
+
+
+   public int getPlayerWins(String handle) {
+       Player_Data playerData = players.get(handle);
+       return playerData != null ? playerData.getWins() : 0;
+   }
+
+
+   public void displayLeaderboard() {
+       List<Player_Data> playerDataList = new ArrayList<>(players.values());
+       playerDataList.sort(Comparator.comparingInt(Player_Data::getScore).reversed());
+
+
+       for (Player_Data playerData : playerDataList) {
+           int totalGames = playerData.getWins() + playerData.getLosses() + playerData.getDraws();
+           System.out.println("Handle: " + playerData.getHandle() + ", Score: " + playerData.getScore() +
+               ", Wins: " + playerData.getWins() + ", Losses: " + playerData.getLosses() +
+               ", Draws: " + playerData.getDraws() + ", Total games: " + totalGames);
+       }
+   }
 }
+
