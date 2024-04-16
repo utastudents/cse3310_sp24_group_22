@@ -66,10 +66,17 @@ public class Board_Game {
 
 
    public void displayBoard() {
-       board.updateBoard(currentWord);
-       board.displayBoard();
-       // this method to display the game board
-   }
+    // Update the board with the current word
+    board.updateBoard(currentWord);
+    
+    // Display the board
+    board.displayBoard();
+    
+    // Display the remaining time
+    long timeRemaining = displayTime();
+    System.out.println("Time remaining: " + timeRemaining + " seconds");
+}
+
 
 
        public boolean leaveGame() {

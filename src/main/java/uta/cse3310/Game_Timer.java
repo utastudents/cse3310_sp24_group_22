@@ -38,9 +38,14 @@ public class Game_Timer {
     }
 
     // Method to prompt players for end game actions
-    private void promptPlayerForEndGame() {
+    private void promptPlayerForEndGame(List<Player> players) {
         // Add code here to prompt players for end game actions
         System.out.println("Prompting players for end game actions...");
+
+        // Print the list of players and their scores
+        for (Player player : players) {
+            System.out.println("Player: " + player.getName() + ", Score: " + player.getScore());
+        }
     }
 
     public boolean isGameEnded() {
@@ -54,11 +59,11 @@ public class Game_Timer {
         String winnerName = "";
 
         // Loop through all players and find the player with the highest score
-        for (String player : players) {
-            int score = getPlayerScore(player);
+        for (Player player : players) {
+            int score = player.getScore();
             if (score > highestScore) {
                 highestScore = score;
-                winnerName = player;
+                winnerName = player.getName();
             }
         }
 
