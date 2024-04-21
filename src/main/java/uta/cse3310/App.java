@@ -64,14 +64,14 @@ public class App extends WebSocketServer {
 
   // All games currently underway on this server are stored in
   // the vector ActiveGames
-  private Vector<Game> ActiveGames = new Vector<Game>();
+  // private Vector<Game> ActiveGames = new Vector<Game>();
 
   private int GameId = 1;
 
   private int connectionId = 0;
 
   private Instant startTime;
-  private int gamesinProgress = ActiveGames.size();
+  //private int gamesinProgress = ActiveGames.size();
 
   public App(int port) {
     super(new InetSocketAddress(port));
@@ -95,57 +95,57 @@ public class App extends WebSocketServer {
         int numPlayers = Integer.parseInt(request.substring(1)); // Assuming request is "/2", "/3", or "/4"
 
         // Search for a game with the desired number of players
-        Game game = null;
-        for (Game g : activeGames) {
-            if (g.getNumPlayers() == numPlayers) {
-                game = g;
-                System.out.println("Found a match");
-                break;
-            }
-        }
+        // Game game = null;
+        // for (Game g : activeGames) {
+        //     if (g.getNumPlayers() == numPlayers) {
+        //         game = g;
+        //         System.out.println("Found a match");
+        //         break;
+        //     }
+        // }
 
-        // If no matches found, create a new game
-        if (game == null) {
-            game = new Game();
-            game.setGameId(GameId++);
-            activeGames.add(game);
-            game.setGamesInProgress(gamesInProgress);
-            game.setNumPlayers(numPlayers); // Set the number of players for the new game
-            System.out.println("Creating a new game for " + numPlayers + " players");
-        }
+        // // If no matches found, create a new game
+        // if (game == null) {
+        //     game = new Game();
+        //     game.setGameId(GameId++);
+        //     activeGames.add(game);
+        //     game.setGamesInProgress(gamesInProgress);
+        //     game.setNumPlayers(numPlayers); // Set the number of players for the new game
+        //     System.out.println("Creating a new game for " + numPlayers + " players");
+        // }
 
-        // Add the player to the game
-        game.addPlayer();
-        System.out.println("Player added to the game");
+        // // Add the player to the game
+        // game.addPlayer();
+        // System.out.println("Player added to the game");
 
-        // If enough players have joined, start the game
-        if (game.getNumPlayers() == numPlayers) {
-            game.StartGame();
-            System.out.println("Game started");
-            gamesInProgress++;
-            for (Game g : activeGames) {
-                g.setGamesInProgress(gamesInProgress);
-                String jsonString = new Gson().toJson(g);
-                System.out.println(jsonString);
-                broadcast(jsonString);
-            }
-        }
+        // // If enough players have joined, start the game
+        // if (game.getNumPlayers() == numPlayers) {
+        //     game.StartGame();
+        //     System.out.println("Game started");
+        //     gamesInProgress++;
+        //     for (Game g : activeGames) {
+        //         g.setGamesInProgress(gamesInProgress);
+        //         String jsonString = new Gson().toJson(g);
+        //         System.out.println(jsonString);
+        //         broadcast(jsonString);
+        //     }
+        // }
 
-        // Send game details to the player who just joined
-        event.setYouAre(game.getPlayers().get(game.getNumPlayers() - 1)); // Set the player's type
-        event.setGameId(game.getGameId());
-        conn.setAttachment(game);
+        // // Send game details to the player who just joined
+        // event.setYouAre(game.getPlayers().get(game.getNumPlayers() - 1)); // Set the player's type
+        // event.setGameId(game.getGameId());
+        // conn.setAttachment(game);
 
-        Gson gson = new Gson();
-        conn.send(gson.toJson(event));
+        // Gson gson = new Gson();
+        // conn.send(gson.toJson(event));
 
-        // Send the state of the game to everyone
-        for (Game g : activeGames) {
-            g.setTotal(total);
-            String jsonString = gson.toJson(g);
-            System.out.println(jsonString);
-            broadcast(jsonString);
-        }
+        // // Send the state of the game to everyone
+        // for (Game g : activeGames) {
+        //     g.setTotal(total);
+        //     String jsonString = gson.toJson(g);
+        //     System.out.println(jsonString);
+        //     broadcast(jsonString);
+        // }
     }
 
 }
@@ -154,28 +154,28 @@ public class App extends WebSocketServer {
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
     System.out.println(conn + " has closed");
     // Retrieve the game tied to the websocket connection
-    Game G = conn.getAttachment();
+    //Game G = conn.getAttachment();
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create();
 
     
-    ActiveGames.removeElement(G);
-    gamesinProgress-=1;
-    if (gamesinProgress <0)
-    {
-        gamesinProgress = 0;
-    }
-    for (Game i : ActiveGames)
-    {
-      i.gamesinProgress = gamesinProgress;
+    // ActiveGames.removeElement(G);
+    // gamesinProgress-=1;
+    // if (gamesinProgress <0)
+    // {
+    //     gamesinProgress = 0;
+    // }
+    // for (Game i : ActiveGames)
+    // {
+    //   i.gamesinProgress = gamesinProgress;
      
-      String jsonString;
-      jsonString = gson.toJson(i);
+    //   String jsonString;
+    //   jsonString = gson.toJson(i);
 
-      System.out.println(jsonString);
-      broadcast(jsonString);
-    }
-    G =null;
+    //   System.out.println(jsonString);
+    //   broadcast(jsonString);
+    // }
+    // G =null;
     
     }
 
@@ -193,8 +193,8 @@ public class App extends WebSocketServer {
     //stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
 
     // Get our Game Object
-    Game G = conn.getAttachment();
-    G.Update(U);
+    // Game G = conn.getAttachment();
+    // G.Update(U);
 
     // send out the game state every time
     // to everyone
