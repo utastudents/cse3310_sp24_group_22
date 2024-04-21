@@ -40,13 +40,13 @@ public class Game_Timer {
     }
 
     // Method to prompt players for end game actions
-    private void promptPlayerForEndGame(List<Player> players) {
+    private void promptPlayerForEndGame(List<Player_Data> players) {
         // Add code here to prompt players for end game actions
         System.out.println("Prompting players for end game actions...");
 
         // Print the list of players and their scores
-        for (Player player : players) {
-            System.out.println("Player: " + player.getName() + ", Score: " + player.getScore());
+        for (Player_Data player : players) {
+            System.out.println("Player: " + player.getHandle() + ", Score: " + player.getScore());
         }
     }
 
@@ -55,13 +55,13 @@ public class Game_Timer {
     }
 
     // Method to declare the winner with the highest score
-    private void declareWinner() {
+    private void declareWinner(List<Player_Data> players) {
         // Add code here to declare the winner with the highest score
         int highestScore = 0;
         String winnerName = "";
 
         // Loop through all players and find the player with the highest score
-        for (Player player : players) {
+        for (Player_Data player : players) {
             int score = player.getScore();
             if (score > highestScore) {
                 highestScore = score;
