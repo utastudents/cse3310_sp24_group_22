@@ -88,7 +88,7 @@ public class App extends WebSocketServer {
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
-        ServerEvent event = new ServerEvent();
+        Player_Data event = new Player_Data();
 
         // Parse the request from the client
         String request = handshake.getResourceDescriptor();
@@ -187,7 +187,7 @@ public class App extends WebSocketServer {
     // A UserEvent is all that is allowed at this point
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create();
-    UserEvent U = gson.fromJson(message, UserEvent.class);
+    Player_Data U = gson.fromJson(message, Player_Data.class);
 
     // Update the running time
     //stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
