@@ -57,10 +57,12 @@ public class Game_Timer {
         // Print the winner with the highest score
         System.out.println("The winner is " + winnerName + " with a score of " + highestScore);
     }
-        public void start() {
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
+    /*public void start() {
+
+        timer.scheduleAtFixedRate(new TimerTask())
+        
+        @Override
+        public void run() {
                 if (secondsRemaining > 0) {
                     System.out.println("Time remaining: " + secondsRemaining + " seconds");
                     secondsRemaining--;
@@ -71,8 +73,7 @@ public class Game_Timer {
                     declareWinner();
                 }
             }
-        }, 0, 1000); // 1000 milliseconds = 1 second
-    }
+    }*/
 
     /*public static void main(String[] args) {
         Game_Timer timer = new Game_Timer(60, 10); // 60 seconds, player score: 10
