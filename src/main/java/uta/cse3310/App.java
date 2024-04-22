@@ -87,8 +87,9 @@ public class App extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
-        Player_Data E = new Player_Data();
+      connectionId++;
+      System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
+      Player_Data E = new Player_Data();
 
         // Parse the request from the client
         String request = handshake.getResourceDescriptor();

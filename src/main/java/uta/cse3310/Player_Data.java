@@ -11,15 +11,17 @@ public class Player_Data {
    private int wins;
    private int losses;
    private int draws;
+   private String Color;
 
 
    public Player_Data(String handle) {
        this.handle = handle;
-       this.gameId = new Random().nextInt(10000); // Generate a unique game ID
+       this.gameId = 0;
        this.score = 0;
        this.wins = 0;
        this.losses = 0;
        this.draws = 0;
+       this.Color = "";
    }
 
 
