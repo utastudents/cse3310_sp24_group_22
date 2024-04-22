@@ -58,25 +58,12 @@ public class Game_Timer {
         System.out.println("The winner is " + winnerName + " with a score of " + highestScore);
     }
     /*public void start() {
-
-        timer.scheduleAtFixedRate(new TimerTask())
-        
-        @Override
-        public void run() {
-                if (secondsRemaining > 0) {
-                    System.out.println("Time remaining: " + secondsRemaining + " seconds");
-                    secondsRemaining--;
-                } else {
-                    System.out.println("Time's up!");
-                    timer.cancel();
-                    isGameEnded = true;
-                    declareWinner();
-                }
+        Timer t = new Timer();  
+        TimerTask tt = new TimerTask() {  
+            @Override
+            public void run() {  
+                
             }
-    }*/
-
-    /*public static void main(String[] args) {
-        Game_Timer timer = new Game_Timer(60, 10); // 60 seconds, player score: 10
-        timer.start();
+        }
     }*/
 }

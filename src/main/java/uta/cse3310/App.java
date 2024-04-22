@@ -181,13 +181,13 @@ public class App extends WebSocketServer {
 
    @Override
   public void onMessage(WebSocket conn, String message) {
-    System.out.println("< " + Duration.between(startTime, Instant.now()).toMillis() + " " + "-" + " " + escape(message));
+    //System.out.println("< " + Duration.between(startTime, Instant.now()).toMillis() + " " + "-" + " " + escape(message));
 
     // Bring in the data from the webpage
     // A UserEvent is all that is allowed at this point
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.create();
-    Player_Data U = gson.fromJson(message, Player_Data.class);
+    // GsonBuilder builder = new GsonBuilder();
+    // Gson gson = builder.create();
+    // Player_Data U = gson.fromJson(message, Player_Data.class);
 
     // Update the running time
     //stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
@@ -198,12 +198,12 @@ public class App extends WebSocketServer {
 
     // send out the game state every time
     // to everyone
-    String jsonString;
-    jsonString = gson.toJson(G);
+    // String jsonString;
+    // jsonString = gson.toJson(G);
 
-    System.out
-        .println("> " + Duration.between(startTime, Instant.now()).toMillis() + " " + "*" + " " + escape(jsonString));
-    broadcast(jsonString); 
+    // System.out
+    //     .println("> " + Duration.between(startTime, Instant.now()).toMillis() + " " + "*" + " " + escape(jsonString));
+    // broadcast(jsonString); 
   }
 
   @Override
