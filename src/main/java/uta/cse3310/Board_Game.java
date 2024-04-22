@@ -67,10 +67,10 @@ public class Board_Game {
 
    public void displayBoard() {
     // Update the board with the current word
-    board.updateBoard(currentWord);
+    //board.updateBoard(currentWord);
     
     // Display the board
-    board.displayBoard();
+    //board.displayBoard();
     
     // Display the remaining time
     long timeRemaining = displayTime();
