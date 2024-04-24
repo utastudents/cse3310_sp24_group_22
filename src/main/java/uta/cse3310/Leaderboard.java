@@ -14,7 +14,7 @@ public class Leaderboard {
        }
 
 
-       players.put(handle, new Player_Data(handle));
+       players.put(handle, handle);
        return true;
    }
 
