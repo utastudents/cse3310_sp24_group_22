@@ -9,12 +9,13 @@ public class Leaderboard {
 
 
    public boolean addPlayer(Player_Data player) {
+        String handle = player.getHandle();
        if (players.containsKey(handle)) {
            return false; // player already exists
        }
 
 
-       players.put(player.getHandle(), player);
+       players.put(handle, player);
        return true;
    }
 
