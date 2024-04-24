@@ -8,13 +8,13 @@ public class Leaderboard {
    private Map<String, Player_Data> players = new HashMap<>();
 
 
-   public boolean addPlayer(String handle) {
+   public boolean addPlayer(Player_Data player) {
        if (players.containsKey(handle)) {
            return false; // player already exists
        }
 
 
-       players.put(handle, handle);
+       players.put(player.getHandle(), player);
        return true;
    }
 
