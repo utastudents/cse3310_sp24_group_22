@@ -14,8 +14,8 @@ public class Player_Data {
    private String Color;
 
 
-   public Player_Data(String handle) {
-       this.handle = handle;
+   public Player_Data() {
+       this.handle = "";
        this.gameId = 0;
        this.score = 0;
        this.wins = 0;
@@ -44,7 +44,9 @@ public class Player_Data {
    public String getHandle() {
        return handle;
    }
-
+    public void setHandle(String Handle){
+        this.handle = Handle;
+    }
 
    public int getGameId() {
        return gameId;
