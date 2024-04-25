@@ -40,9 +40,9 @@ public class Game_Timer {
             return true;
         }
         else
-        (
+        {
             return false;
-        )
+        }
     }
 
     // Method to declare the winner with the highest score
