@@ -84,7 +84,7 @@
 <script>
 	var connection;
 	var serverUrl;
-	serverUrl = "ws://" + window.location.hostname + `:${parseInt(window.location.port) + 100}`;
+	serverUrl = "ws://" + window.location.hostname + ":9122";
 	var connection = new WebSocket(serverUrl);
 	connection.onopen = function (evt) {
 	    console.log("open");
