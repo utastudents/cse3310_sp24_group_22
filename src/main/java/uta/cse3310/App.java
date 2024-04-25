@@ -258,13 +258,13 @@ public class App extends WebSocketServer {
 
     // create and start the websocket server
 
-    port = 9122;
+    int Web_port = 9122;
     String WSPort = System.getenv("WEBSOCKET_PORT");
     if (WSPort!=null) {
-      port = Integer.valueOf(WSPort);
+      Web_port = Integer.valueOf(WSPort);
     }
 
-    App A = new App(port);
+    App A = new App(Web_port);
     A.setReuseAddr(true);
     A.start();
     System.out.println("websocket Server started on port: " + port);
