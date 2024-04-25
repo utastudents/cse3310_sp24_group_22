@@ -21,6 +21,7 @@ public class Game_TimerTest {
         // Wait for a few seconds (simulating game play)
         try {
             Thread.sleep(3000); // Sleep for 3 seconds
+            gameTimer.stop();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -37,6 +38,7 @@ public class Game_TimerTest {
         // Wait for the timer to finish
         try {
             Thread.sleep(11000); // Sleep for 11 seconds (more than the timer duration)
+            gameTimer.stop();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -57,13 +57,15 @@ public class Game_Timer {
         // Print the winner with the highest score
         System.out.println("The winner is " + winnerName + " with a score of " + highestScore);
     }
-    /*public void start() {
+    public void start() {
         Timer t = new Timer();  
         TimerTask tt = new TimerTask() {  
             @Override
             public void run() {  
-                
+                System.out.println("Timer is working");
             }
         }
-    }*/
+        t.schedule(tt, 10000);
+        
+    }
 }

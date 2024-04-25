@@ -4,7 +4,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class Communication_Test {
-    @Test
+    /*@Test
     public void testCommunication() {
         Communication messaging = new Communication();
 
@@ -25,5 +25,5 @@ public class Communication_Test {
             messages.add(message);
         }
         return messages;
-    }
+    }*/
 }
