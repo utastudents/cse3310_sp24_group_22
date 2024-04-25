@@ -48,20 +48,20 @@ jobs:
            # without enable-linger, you must be logged in. So, we enable it.
            ssh production "loginctl enable-linger"
            ssh production "mkdir --parents .config/systemd/user"
-           ssh production "rm -f .config/systemd/user/${{ vars.service_name }}.service"
-           ssh production 'echo "[Unit]" >> .config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "Description=${{ vars.service_name }}" >> .config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "[Service]" >> .config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "Type=simple" >> .config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "Restart=always" >> .config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "RestartSec=5" >> .config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "Environment=VERSION=\"${{ github.sha }}\"" >>.config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "Environment=WEBSOCKET_PORT=${{ vars.websocket_port }}" >>.config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "Environment=HTTP_PORT=${{ vars.http_port }}" >>.config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "ExecStart=mvn exec:java -Dexec.mainClass=com.cse3310.App" >> .config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "WorkingDirectory=$PWD/${{ github.event.repository.name }}" >> .config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "[Install]" >>.config/systemd/user/${{ vars.service_name }}.service'
-           ssh production 'echo "WantedBy=default.target" >>.config/systemd/user/${{ vars.service_name }}.service'
+           ssh production "rm -f .config/systemd/user/${{ vars.SERVICE_NAME }}.service"
+           ssh production 'echo "[Unit]" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "Description=${{ vars.SERVICE_NAME }}" >> .config/systemd/user/${{ vars.service_name }}.service'
+           ssh production 'echo "[Service]" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "Type=simple" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "Restart=always" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "RestartSec=5" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "Environment=VERSION=\"${{ github.sha }}\"" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "Environment=WEBSOCKET_PORT=${{ vars.WEBSOCKET_PORT }}" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "Environment=HTTP_PORT=${{ vars.HTTP_PORT }}" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "ExecStart=mvn exec:java -Dexec.mainClass=com.cse3310.App" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "WorkingDirectory=$PWD/${{ github.event.repository.name }}" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "[Install]" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "WantedBy=default.target" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
       - name: systemd reload
         run: |
             ssh production "systemctl --user daemon-reload"
