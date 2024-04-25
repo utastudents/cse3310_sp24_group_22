@@ -64,7 +64,7 @@ public class Game_Timer {
             public void run() {  
                 System.out.println("Timer is working");
             }
-        }
+        };
         t.schedule(tt, 10000);
         
     }
