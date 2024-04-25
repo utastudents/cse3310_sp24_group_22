@@ -10,7 +10,7 @@ public class Game_TimerTest {
     @Before
     public void setUp() {
         // Initialize the game timer with 30 seconds and a player score of 0
-        gameTimer = new Game_Timer(30, 0);
+        gameTimer = new Game_Timer(10, 0);
     }
 
     @Test

@@ -36,7 +36,13 @@ public class Game_Timer {
     }
 
     public boolean isGameEnded() {
-        return isGameEnded;
+        if (secondsRemaining <= 0){
+            return true
+        }
+        else
+        (
+            return false
+        )
     }
 
     // Method to declare the winner with the highest score
@@ -62,10 +68,10 @@ public class Game_Timer {
         TimerTask tt = new TimerTask() {  
             @Override
             public void run() {  
-                System.out.println("Timer is working");
+                secondsRemaining --;
             }
         };
-        t.schedule(tt, 10000);
+        t.schedule(tt, 1000, 1000);
         
     }
 }
