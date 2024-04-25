@@ -82,11 +82,9 @@
 </html>
 
 <script>
-	var connection = null;
+	var connection = new Websocket("ws://" + window.location.hostname + ":9122");
 	var serverUrl;
 	serverUrl = "ws://" + window.location.hostname + ":9122";
-	// Create the connection with the server
-	connection = new WebSocket(serverUrl);
 
 	connection.onopen = function (evt) {
 	    console.log("open");
