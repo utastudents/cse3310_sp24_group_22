@@ -37,11 +37,11 @@ public class Game_Timer {
 
     public boolean isGameEnded() {
         if (secondsRemaining <= 0){
-            return true
+            return true;
         }
         else
         (
-            return false
+            return false;
         )
     }
 
