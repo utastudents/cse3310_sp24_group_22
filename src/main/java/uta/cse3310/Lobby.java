@@ -1,6 +1,10 @@
 package uta.cse3310;
+
 import java.util.ArrayList;
+
 public class Lobby {
+    public String MsgType="Lobby"; 
+    public ArrayList<String> playerList = new ArrayList<String>();
     public ArrayList<String> two_player_game = new ArrayList<String>();
     public ArrayList<String> three_player_game = new ArrayList<String>();
     public ArrayList<String> four_player_game = new ArrayList<String>();

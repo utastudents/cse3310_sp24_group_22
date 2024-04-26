@@ -68,10 +68,12 @@ public class App extends WebSocketServer {
 
   private int GameId = 1;
 
+  private Lobby theLobby;
+
   private int connectionId = 0;
 
   private Instant startTime;
-  //private int gamesinProgress = ActiveGames.size();
+  // private int gamesinProgress = ActiveGames.size();
 
   public App(int port) {
     super(new InetSocketAddress(port));
@@ -85,126 +87,159 @@ public class App extends WebSocketServer {
     super(new InetSocketAddress(port), Collections.<Draft>singletonList(draft));
   }
 
-    @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
-      connectionId++;
-      System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
-      Player_Data E = new Player_Data();
+  @Override
+  public void onOpen(WebSocket conn, ClientHandshake handshake) {
+    connectionId++;
+    System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
 
-        // Parse the request from the client
-        String request = handshake.getResourceDescriptor();
-        int numPlayers = Integer.parseInt(request.substring(1)); // Assuming request is "/2", "/3", or "/4"
+    Player_Data E = new Player_Data();
 
-        // Search for a game with the desired number of players
-        // Game game = null;
-        // for (Game g : activeGames) {
-        //     if (g.getNumPlayers() == numPlayers) {
-        //         game = g;
-        //         System.out.println("Found a match");
-        //         break;
-        //     }
-        // }
+    // not sure if this is the right place to create the lobby.
+    theLobby = new Lobby();
 
-        // // If no matches found, create a new game
-        // if (game == null) {
-        //     game = new Game();
-        //     game.setGameId(GameId++);
-        //     activeGames.add(game);
-        //     game.setGamesInProgress(gamesInProgress);
-        //     game.setNumPlayers(numPlayers); // Set the number of players for the new game
-        //     System.out.println("Creating a new game for " + numPlayers + " players");
-        // }
+    // Need to send the clienID to the client. It will be usefull.
 
-        // // Add the player to the game
-        // game.addPlayer();
-        // System.out.println("Player added to the game");
+    IDMessage ID = new IDMessage();
+    ID.connectionID = connectionId;
+    // send it to the client
 
-        // // If enough players have joined, start the game
-        // if (game.getNumPlayers() == numPlayers) {
-        //     game.StartGame();
-        //     System.out.println("Game started");
-        //     gamesInProgress++;
-        //     for (Game g : activeGames) {
-        //         g.setGamesInProgress(gamesInProgress);
-        //         String jsonString = new Gson().toJson(g);
-        //         System.out.println(jsonString);
-        //         broadcast(jsonString);
-        //     }
-        // }
+    String jsonString = new Gson().toJson(ID);
+    System.out.println(jsonString);
+    conn.send(jsonString);
 
-        // // Send game details to the player who just joined
-        // event.setYouAre(game.getPlayers().get(game.getNumPlayers() - 1)); // Set the player's type
-        // event.setGameId(game.getGameId());
-        // conn.setAttachment(game);
+    // Parse the request from the client
+    // String request = handshake.getResourceDescriptor();
+    // int numPlayers = Integer.parseInt(request.substring(1)); // Assuming request
+    // is "/2", "/3", or "/4"
 
-        // Gson gson = new Gson();
-        // conn.send(gson.toJson(event));
+    // Search for a game with the desired number of players
+    // Game game = null;
+    // for (Game g : activeGames) {
+    // if (g.getNumPlayers() == numPlayers) {
+    // game = g;
+    // System.out.println("Found a match");
+    // break;
+    // }
+    // }
 
-        // // Send the state of the game to everyone
-        // for (Game g : activeGames) {
-        //     g.setTotal(total);
-        //     String jsonString = gson.toJson(g);
-        //     System.out.println(jsonString);
-        //     broadcast(jsonString);
-        // }
-    }
+    // // If no matches found, create a new game
+    // if (game == null) {
+    // game = new Game();
+    // game.setGameId(GameId++);
+    // activeGames.add(game);
+    // game.setGamesInProgress(gamesInProgress);
+    // game.setNumPlayers(numPlayers); // Set the number of players for the new game
+    // System.out.println("Creating a new game for " + numPlayers + " players");
+    // }
 
+    // // Add the player to the game
+    // game.addPlayer();
+    // System.out.println("Player added to the game");
 
+    // // If enough players have joined, start the game
+    // if (game.getNumPlayers() == numPlayers) {
+    // game.StartGame();
+    // System.out.println("Game started");
+    // gamesInProgress++;
+    // for (Game g : activeGames) {
+    // g.setGamesInProgress(gamesInProgress);
+    // String jsonString = new Gson().toJson(g);
+    // System.out.println(jsonString);
+    // broadcast(jsonString);
+    // }
+    // }
+
+    // // Send game details to the player who just joined
+    // event.setYouAre(game.getPlayers().get(game.getNumPlayers() - 1)); // Set the
+    // player's type
+    // event.setGameId(game.getGameId());
+    // conn.setAttachment(game);
+
+    // Gson gson = new Gson();
+    // conn.send(gson.toJson(event));
+
+    // // Send the state of the game to everyone
+    // for (Game g : activeGames) {
+    // g.setTotal(total);
+    // String jsonString = gson.toJson(g);
+    // System.out.println(jsonString);
+    // broadcast(jsonString);
+    // }
+  }
 
   @Override
   public void onClose(WebSocket conn, int code, String reason, boolean remote) {
     System.out.println(conn + " has closed");
     // Retrieve the game tied to the websocket connection
-    //Game G = conn.getAttachment();
+    // Game G = conn.getAttachment();
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create();
 
-    
     // ActiveGames.removeElement(G);
     // gamesinProgress-=1;
     // if (gamesinProgress <0)
     // {
-    //     gamesinProgress = 0;
+    // gamesinProgress = 0;
     // }
     // for (Game i : ActiveGames)
     // {
-    //   i.gamesinProgress = gamesinProgress;
-     
-    //   String jsonString;
-    //   jsonString = gson.toJson(i);
+    // i.gamesinProgress = gamesinProgress;
 
-    //   System.out.println(jsonString);
-    //   broadcast(jsonString);
+    // String jsonString;
+    // jsonString = gson.toJson(i);
+
+    // System.out.println(jsonString);
+    // broadcast(jsonString);
     // }
     // G =null;
-    
+
+  }
+
+  @Override
+  public void onMessage(WebSocket conn, String message) {
+    System.out.println("< " + Duration.between(startTime,
+        Instant.now()).toMillis() + " " + "-" + " " + escape(message));
+    GsonBuilder builder = new GsonBuilder();
+    Gson gson = builder.create();
+    if (message.indexOf("NameMessage") > 0) {
+
+      NameMessage N = gson.fromJson(message, NameMessage.class);
+
+      System.out.println("the name is " + N.name);
+      // put this in the lobby, please.
+      // may need some more information with it, like the connection ID.
+      theLobby.playerList.add(N.name);
+
+    }
+    if (message.indexOf("ChatMessage") > 0) {
+      // for now, lets just send out what was
+      // received.
+      broadcast(message);
+      System.out.println("sending chat message out");
+
     }
 
-   @Override
-  public void onMessage(WebSocket conn, String message) {
-    //System.out.println("< " + Duration.between(startTime, Instant.now()).toMillis() + " " + "-" + " " + escape(message));
-
-    // Bring in the data from the webpage
-    // A UserEvent is all that is allowed at this point
+  
     // GsonBuilder builder = new GsonBuilder();
     // Gson gson = builder.create();
     // Player_Data U = gson.fromJson(message, Player_Data.class);
 
     // Update the running time
-    //stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
+    // stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
 
     // Get our Game Object
     // Game G = conn.getAttachment();
     // G.Update(U);
 
-    // send out the game state every time
+    // send out the lobby state every time
     // to everyone
-    // String jsonString;
-    // jsonString = gson.toJson(G);
+    String jsonString;
+    jsonString = gson.toJson(theLobby);
 
-    // System.out
-    //     .println("> " + Duration.between(startTime, Instant.now()).toMillis() + " " + "*" + " " + escape(jsonString));
-    // broadcast(jsonString); 
+    System.out
+        .println("> " + Duration.between(startTime, Instant.now()).toMillis() + " " +
+            "*" + " " + escape(jsonString));
+    broadcast(jsonString);
   }
 
   @Override
@@ -224,7 +259,7 @@ public class App extends WebSocketServer {
   @Override
   public void onStart() {
     setConnectionLostTimeout(0);
-    //stats = new Statistics();
+    // stats = new Statistics();
     startTime = Instant.now();
   }
 
@@ -242,11 +277,12 @@ public class App extends WebSocketServer {
     }
     return retval;
   }
+
   public static void main(String[] args) {
 
     String HttpPort = System.getenv("HTTP_PORT");
     int port = 9022;
-    if (HttpPort!=null) {
+    if (HttpPort != null) {
       port = Integer.valueOf(HttpPort);
     }
 
@@ -260,12 +296,12 @@ public class App extends WebSocketServer {
 
     int Web_port = 9122;
     String WSPort = System.getenv("WEBSOCKET_PORT");
-    if (WSPort!=null) {
+    if (WSPort != null) {
       Web_port = Integer.valueOf(WSPort);
     }
 
     App A = new App(Web_port);
-    //A.setReuseAddr(true);
+    A.setReuseAddr(true);
     A.start();
     System.out.println("websocket Server started on port: " + Web_port);
 
