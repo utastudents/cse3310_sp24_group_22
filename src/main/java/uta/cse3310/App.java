@@ -123,6 +123,7 @@ public class App extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         System.out.println(conn + " has closed");
         String user = conn.getAttachment();
+        System.out.println(user);
         leaderboard.remove(user);
         Players.remove(user);
 
@@ -138,7 +139,7 @@ public class App extends WebSocketServer {
         // Deserialize the JSON message into a UserEvent object
         Gson gson = new GsonBuilder().create();
         UserEvent U = gson.fromJson(message, UserEvent.class);
-        conn.setAttachment(U.Handle);
+        
         //Just entered the game
         if (U.ready == -1)
         {
@@ -151,6 +152,7 @@ public class App extends WebSocketServer {
         	
         	//Add it to all players list
         	Players.put(U.Handle,U);
+        	conn.setAttachment(U.Handle);
         }
         
         //Add them to respective wait list
