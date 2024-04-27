@@ -116,11 +116,20 @@ public class App extends WebSocketServer {
 		conn.send(gson.toJson(ser));
 		System.out.println(gson.toJson(ser));
 		ser+=1;
+		
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         System.out.println(conn + " has closed");
+        String user = conn.getAttachment();
+        leaderboard.remove(user);
+        Players.remove(user);
+
+		Gson gson = new GsonBuilder().create();
+		String jsonString = gson.toJson(leaderboard);
+		broadcast(jsonString);  
+        
     }
 
     @Override
@@ -129,7 +138,7 @@ public class App extends WebSocketServer {
         // Deserialize the JSON message into a UserEvent object
         Gson gson = new GsonBuilder().create();
         UserEvent U = gson.fromJson(message, UserEvent.class);
-        
+        conn.setAttachment(U.Handle);
         //Just entered the game
         if (U.ready == -1)
         {
@@ -209,6 +218,7 @@ public class App extends WebSocketServer {
         		g = null;
         	}
         }
+        
 
 		//If ready = 0, that means they are already in a game
         else
