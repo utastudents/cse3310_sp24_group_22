@@ -14,5 +14,10 @@ public class Leaderboard {
     public void add(String handle, int score) {
         LB.put(handle, score);
     }
+    
+    public void remove(String handle)
+    {
+    	LB.remove(handle);
+    }
 }
 
