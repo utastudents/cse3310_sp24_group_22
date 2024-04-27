@@ -17,7 +17,10 @@ public class Leaderboard {
     
     public void remove(String handle)
     {
-    	LB.remove(handle);
+    	if (handle!= null)
+    	{
+    		LB.remove(handle);
+    	}
     }
 }
 

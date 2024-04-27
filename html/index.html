@@ -286,11 +286,11 @@
 			var LeaderBoardTable = document.getElementById("Leader_board");
 
 			// Clear existing rows
-			//LeaderBoardTable.innerHTML = "";
+			LeaderBoardTable.innerHTML = "";
 		
 			for (var key in sent_LB.LB) 
 			{
-				if (leaderboard_list.includes(key))
+				/*if (leaderboard_list.includes(key))
 				{
 					for (var i = 0; i < LeaderBoardTable.rows.length; i++)
 					{
@@ -301,15 +301,15 @@
 					}
 				}
 				else
-				{
-					leaderboard_list.push(key);
+				{*/
+					//leaderboard_list.push(key);
 					var row = LeaderBoardTable.insertRow();
 					var cell1 = row.insertCell(0);
 					var cell2 = row.insertCell(1);
 					
 					cell1.textContent = key;
 					cell2.textContent = sent_LB.LB[key];
-				}
+				
     		}
 		}
 		
