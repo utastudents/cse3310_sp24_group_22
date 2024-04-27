@@ -1,246 +1,449 @@
-<!DOCTYPE html>
-<html>
 
 <head>
-	<title>TWSG Lobby</title>
+    <title>TWSG Lobby</title>
 </head>
 
-<body>
 
-	<form id="Lobby">
-		<h1>TWSG Lobby</h1>
-		<label for="username">Username:</label>
-		<input type="text" id="username" name="username" placeholder="Enter your username">
-		<input type="button" id="enter_Game" name="Join" onclick=join() value="Join">
+<div id="Basic_info">
+    <h1>TWSG Lobby</h1>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" placeholder="Enter your username">
+    
+    <br><br>
+    <div id="Game states">
+        <label for="game-type">Select Game Type:</label>
+        <input type="radio" id="game-type-2" name="game_type" value="2" checked>
+        <label for="game_type_2">2 Players</label>
+        <input type="radio" id="game-type-3" name="game_type" value="3">
+        <label for="game_type_3">3 Players</label>
+        <input type="radio" id="game-type-4" name="game_type" value="4">
+        <label for="game_type_4">4 Players</label>
+    
+        <br><br>
+        <input type="button" id="enter_Game" name="Join" onclick="join()" value="Join">
+    </div>
+</div>
 
-		<br><br>
-		<div id="Game states" style="display: none;">
-			<label for="game-type">Select Game Type:</label>
-			<input type="radio" id="game-type-2" name="game-type" value="2 Players">
-			<label for="game-type-2">2 Players</label>
-			<input type="radio" id="game-type-3" name="game-type" value="3 Players">
-			<label for="game-type-3">3 Players</label>
-			<input type="radio" id="game-type-4" name="game-type" value="4 Players">
-			<label for="game-type-4">4 Players</label>
+<div id="Lobby" style="display: none;">
+    <br><br>
+    <label for="ready">Select status:</label>
+	<input type="radio" id="ready" name="game_status" value="ready" onclick = "update()" unchecked>
+	<label for="ready">Ready to play!</label>
 
+	<input type="radio" id="not_ready" name="game_status" value="not_ready" onclick = "update()" checked> 
+	<label for="not_ready">Not ready to play yet!</label>
 
-			<br><br>
+    
+    <br><br>
+    <div id="waiting-area-2">
+        <h2>Waiting for 2 players</h2>
+        <label id="Game2_waiting"></label>
+    </div>
+    <br><br>
+    
+    <div id="waiting-area-3">
+        <h2>Waiting for 3 players</h2>
+        <br>
+        <label id="Game3_waiting"></label>
+    </div>
+    <br><br>
+    
+    <div id="waiting-area-4">
+        <h2>Waiting for 4 players</h2>
+        <label id="Game4_waiting"></label>
+    </div>
+    <br><br>
 
-			<label for="ready">Select status:</label>
-			<input type="radio" id="ready" name="game-status" value="ready">
-			<label for="ready">Ready to play!</label>
+    <h2>Leaderboard</h2>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Points</th>
+        </tr>
+    </table>
+    
+    <br>
+    
+    <h2>Chat</h2>
+    <input type="text" id="chat-input" name="chat-input" placeholder="Enter your message">
+    <button type="button" id="chat-send">Send</button>
+    <div id="chat-messages">
+        <table></table>
+    </div>
+</div>
 
+<div id="Game" style="display: none;">
+	<div id = "table" style="order: -1;">
+		<h1>Game</h1>
 
-			<input type="radio" id="not_ready" name="game-status" value="not_ready">
-			<label for="not_ready">Not ready to play yet!</label>
-		</div>
-		<br><br>
+		<table id="Grid">
 
-		<div id="waiting-area-2">
-			<h2>Waiting for 2 players</h2>
-			<label id="2_player_game"></label>
-		</div>
-		<br><br>
+		</table>
+	</div>
 
-		<div id="waiting-area-3">
-			<h2>Waiting for 3 players</h2>
-			<label id="3_player_game"></label>
-		</div>
-		<br><br>
-
-		<div id="waiting-area-4">
-			<h2>Waiting for 4 players</h2>
-			<label id="4_player_game"></label>
-		</div>
-		<br><br>
-
-		<h2>Leaderboard</h2>
-		<table>
+    <div id="Leaderboard" style="width: 200px; order: 1;">
+        <h2>Leaderboard</h2>
+		<table id="Leader_board">
 			<tr>
 				<th>Username</th>
 				<th>Points</th>
 			</tr>
 		</table>
+    </div>
+    <div id="timer">3:00</div>
+</div>
 
-		<br>
 
-		<h2>Chat</h2>
-		<input type="text" id="chat-input" name="chat-input" placeholder="Enter your message">
-		<button type="button" id="chat-send">Send</button>
-		<div id="chat-messages">
-			<table>
-			</table>
-		</div>
-	</form>
 
-	<div id="Game_interface" style="display: none;">
-		<h1>Game<h1>
-				<table id="Grid">
-
-				</table>
-	</div>
-</body>
-
-</html>
 
 <script>
-	var connection;
-	var serverUrl;
-	var ConnectionID;
-	serverUrl = "ws://" + window.location.hostname + ":9122";
-	var connection = new WebSocket(serverUrl);
-	connection.onopen = function (evt) {
-		console.log("open");
-	}
-	connection.onclose = function (evt) {
-		console.log("close");
-		document.getElementById("topMessage").innerHTML = "Server Offline"
-	}
-	connection.onmessage = function (evt) {
-		var msg;
-		msg = evt.data;
-
-		console.log("Message received: " + msg);
-		const obj = JSON.parse(msg);
-
-		if ('MsgType' in obj) {
-			if (obj.MsgType == "IDMessage") {
-				// an ID messag has arrived
-				ConnectionID = obj.connectionID;
-				console.log("got a connection id " + ConnectionID);
-
-			}
-			else if (obj.MsgType == "ChatMessage") {
-
-			}
-			else if (obj.MsgType == "Lobby") {
-				console.log("number of names "+obj.playerList.length);
-
-			}
-		}
-
-	}
-
-	class NameMessage {
-		MsgType;
-		name;
-	}
-
-	function join() {
-		var username = document.getElementById("username").value;
-		if (username.trim() !== "") {
-			// Show the hidden buttons
-			document.getElementById("Game states").style.display = "inline-block";
-            N = new NameMessage();
-			N.MsgType = "NameMessage";
-			N.name = username.trim();
-			N.connectionID = ConnectionID;
-
-			// Send it out
-			connection.send(JSON.stringify(N));
-			console.log(JSON.stringify(N))
-
-
-		} else {
-			alert("Please enter a username before joining.");
+	class UserEvent 
+	{
+		constructor() 
+		{
+			this.GameType = 0;
+			this.Handle = "";
+			this.ready = -1;
+			this.game = null;
+			this.Uid = 0;
+			this.color = "";
+			this.letters = [];
 		}
 	}
+	
+	class Coordinate
+	{
+		constructor(row,col)
+		{
+			this.row = row;
+			this.col = col;
+		}
+	}
+	class Leaderboard
+	{
+		constructor()
+		{
+			this.LB = null;
+		}
+	}
+	
+	
+   	
+	var userid = -1; //Unique to each user
+	
+    var connection = null;
+    var serverUrl = "ws://" + window.location.hostname + ":9122";
+   	var username = null;
+   	var gametype = null;
+   	var ready = -1;
+   	
 
-</script>
-
-<script>
-	var form = document.getElementById("Lobby");
+	
+	var Game = null;
+	var no_clicks = 0;
+	var selected_letters = [];
+	var selected_word = null;
+	var button = null;
 	var number = 1;
-
-	for (var i = 1; i <= 50; i++) {
+	var array_list = null;
+	var timerInterval;
+	var state_timer = false;
+	
+	var leaderboard_list = [];
+	
+	for (var i = 0; i < 20; i++) 
+	{
+		var buttonTable = document.getElementById("Grid");
 		var row = buttonTable.insertRow();
-		for (var j = 1; j <= 50; j++) {
+		for (var j = 1; j < 21; j++)
+		{
 			var cell = row.insertCell();
 			var button = document.createElement("button");
 			button.textContent = "?";
 			button.id = number;
-
+			
 			button.style.border = "none";
 			button.style.backgroundColor = "transparent";
 			button.style.boxShadow = "none";
-			//button.style.padding = "0";
 			button.style.margin = "0";
 			button.style.outline = "none";
 			button.style.cursor = "pointer";
-			//button.style.width = "30px";
-			//button.style.height = "30px";
-			button.style.fontSize = "10px";
+			button.style.fontSize = "20px";
+		    button.style.width = "20px";
+		    button.style.height = "20px";			
 			button.style.lineHeight = "0";
-
+		    (function(i, j) {
+		        button.addEventListener("click", function() {
+		            button_click(i, j);
+		        });
+		    })(i, j); 
+					
 			cell.appendChild(button);
-			number += 1;
+			number+=1;	
 		}
-
-
 	}
+	
+    connection = new WebSocket(serverUrl);
 
-</script>
+    connection.onopen = function (evt) 
+    {
+        console.log("open");
+    }
+    
+    connection.onclose = function (evt) 
+    {
+        console.log("close");
+    }   
+        
+	connection.onmessage = function(event) 
+	{
+		//Store the data
+		var receivedData = event.data;
+		console.log(receivedData);
+		
+		//Assign each server to a userid
+		if (!isNaN(receivedData)) 
+		{		
+        	userid = parseInt(receivedData);
+    	}
+    	
+    	//Checks if it is a waiting list
+    	else if (Array.isArray(JSON.parse(event.data)))
+    	{
+    		var waiting_list = "";
+    		array_list = JSON.parse(event.data);
+    		//Add the people to waiting list
+			for (var j = 1; j < array_list.length; j++)
+			{				
+				waiting_list+=array_list[j] + " ";
+			}
+			
+			//Display waiting list
+			if (array_list[0] == "2")
+			{
+				document.getElementById("Game2_waiting").innerHTML = waiting_list;
+			}
+			
+			else if (array_list[0] == "3")
+			{
+				document.getElementById("Game3_waiting").innerHTML = waiting_list;
+			}
+			else
+			{
+				document.getElementById("Game4_waiting").innerHTML = waiting_list;
+			}
+    	}
+    	
+    	//Get User events
+    	else if (receivedData.includes("Handle"))
+    	{
+    		//Get what was sent into userevent
+    		userevent = JSON.parse(event.data);
+    		
+    		//Check if it is in a game and if this server has this userid
+			if ((userevent.ready === 0) && (userevent.game.ID.includes(userid)))
+			{
+				console.log(userevent.game.ID);
+				//Remove lobby and show the game
+				document.getElementById("Lobby").style.display = "none";
+				document.getElementById("Game").style.display = "flex";
+				
+				if (state_timer == false)
+				{
+					startGameTimer();
+					state_timer = true;
+				}
+				
+				//Assign the grid with each letter
+				var number = 1;
+				for (var i = 0; i < 20; i++) 
+				{
+					for (var k = 0; k < 20; k++) 
+					{
+						var button = document.getElementById(number);
+						button.textContent = userevent.game.grid[i][k];
+						number++;
+					}
+				}
 
-<script>
+				//Go through the letters to highlight if it is there
+				for (var i = 0; i < userevent.letters.length; i++) 
+				{									
+					var buttonId = userevent.letters[i].row * 20 + userevent.letters[i].col;
+					button = document.getElementById(buttonId);
+					button.style.backgroundColor = userevent.color;
+				} 																		
+			}		   		
+    	}
+    	
+    	// Assuming 'receivedData' contains the TreeMap data
+		//else if ('LB' in receivedData) 
+		else
+		{
+			var sent_LB = JSON.parse(event.data);
+			console.log("I received leaderboard now i have to check it");
+			console.log(sent_LB);
+			var LeaderBoardTable = document.getElementById("Leader_board");
 
-	var no_clicks = 0;
-	var selected_letters = [];
+			// Clear existing rows
+			//LeaderBoardTable.innerHTML = "";
+		
+			for (var key in sent_LB.LB) 
+			{
+				if (leaderboard_list.includes(key))
+				{
+					for (var i = 0; i < LeaderBoardTable.rows.length; i++)
+					{
+						if (LeaderBoardTable.rows[i].cells[0].textContent === key)
+						{
+							LeaderBoardTable.rows[i].cells[1].textContent = sent_LB.LB[key];
+						}
+					}
+				}
+				else
+				{
+					leaderboard_list.push(key);
+					var row = LeaderBoardTable.insertRow();
+					var cell1 = row.insertCell(0);
+					var cell2 = row.insertCell(1);
+					
+					cell1.textContent = key;
+					cell2.textContent = sent_LB.LB[key];
+				}
+    		}
+		}
+		
 
-	function button_click(row, column) {
+    }
+    function update()
+    {
+		U = new UserEvent();
+		U.Handle = username;
+		U.GameType = gametype;
+		var radioButton = document.getElementById("ready");
+		console.log(radioButton);
+		if (radioButton.checked)
+		{
+			U.ready = 1;
+			
+		}
+		else
+		{
+			U.ready = -1;
+		}
+		
+		
+		connection.send(JSON.stringify(U));
+		console.log(JSON.stringify(U));      	
+    }
+
+    function join()
+    {
+        username = document.getElementById("username").value;
+        var gameTypeRadios = document.getElementsByName("game_type");
+        if (username.trim() !== "") 
+        {
+        	for (var i = 0; i < gameTypeRadios.length; i++) 
+        	{
+        		if (gameTypeRadios[i].checked)
+        		{
+        			gametype = gameTypeRadios[i].value;
+        		}
+        	}
+        	
+			U = new UserEvent();
+			U.Handle = username;
+			U.GameType = gametype;
+			U.ready = -1;
+			U.game = null;
+			U.Uid = userid;
+			U.letters = [];
+			
+			connection.send(JSON.stringify(U));
+			console.log(JSON.stringify(U));         	
+        							         
+           // Show the lobby form
+            document.getElementById("Lobby").style.display = "block";
+            // Hide the basic info form
+            document.getElementById("Basic_info").style.display = "none";
+        } 
+        
+        else 
+        {
+            alert("Please enter a username before joining.");
+        }
+        
+    }
+    
+	function button_click(row, column) 
+	{
+		U = new UserEvent();
+		U.Handle = username;
+		U.GameType = gametype;
+		U.ready = 0;
+		U.game = Game;
+		U.Uid = userid;
+		
+
+
 		selected_letters.push({ row: row, column: column });
 		no_clicks += 1;
+		console.log("no_clicks: "+no_clicks);
 
-		if (no_clicks % 2 === 0) {
-			var selected_word = isValidOrientation(selected_letters[selected_letters.length - 2], selected_letters[selected_letters.length - 1]);
-
-			if (selected_word.length !== 0) {
-				connection.send(JSON.stringify(selected_word));
-			}
-
-			else {
-				selected_letters = [];
-			}
+		
+		if (no_clicks === 1)
+		{
+			var buttonId = row * 20 + column;
+			button = document.getElementById(buttonId);
+			button.style.backgroundColor = "#f2f2f2";			
 		}
+		if (no_clicks === 2) 
+		{
+			var coord1 = new Coordinate(selected_letters[0].row, selected_letters[0].column);
+			var coord2 = new Coordinate(selected_letters[1].row, selected_letters[1].column);
+			U.letters.push(coord1);
+			U.letters.push(coord2);
+
+		    connection.send(JSON.stringify(U));
+		    console.log(JSON.stringify(U));
+		    no_clicks = 0;
+		    selected_letters = [];
+    	}
+	    
+			
 	}
 
-	function isValidOrientation(letter1, letter2) {
-		var selected_word = [];
-		const rowDiff = Math.abs(letter1.row - letter2.row);
-		const colDiff = Math.abs(letter1.column - letter2.column);
+function startTimer(duration, display) 
+{
+    var timer = duration, minutes, seconds;
+    timerInterval = setInterval(function () 
+    {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
 
-		if (letter1.column === letter2.column) {
-			// Vertical orientation
-			for (var i = Math.min(letter1.row, letter2.row); i <= Math.max(letter1.row, letter2.row); i++) {
-				selected_word.push(grid[i][letter1.column]);
-			}
-			return selected_word;
-		}
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-		else if (letter1.row === letter2.row) {
-			// Horizontal orientation
-			for (var i = Math.min(letter1.column, letter2.column); i <= Math.max(letter1.column, letter2.column); i++) {
-				selected_word.push(grid[letter1.row][i]);
-			}
+        display.textContent = minutes + ":" + seconds;
 
-			return selected_word;
-		}
+        if (--timer < 0) 
+        {
+            clearInterval(timerInterval);
+            // Perform actions when the timer reaches zero
+            alert("Time's up!");
+        }
+    }, 1000);
+}
 
-		else if (rowDiff === colDiff) {
-			// Diagonal orientation
-			var rowStart = Math.min(letter1.row, letter2.row);
-			var colStart = Math.min(letter1.column, letter2.column);
-			var rowEnd = Math.max(letter1.row, letter2.row);
-			var colEnd = Math.max(letter1.column, letter2.column);
+function startGameTimer() 
+{
+    var threeMinutes = 60 * 3, // 3 minutes in seconds
+        display = document.querySelector('#timer');
+    startTimer(threeMinutes, display);
+}
+	
 
-			// Traverse the diagonal
-			for (var row = rowStart, col = colStart; row <= rowEnd && col <= colEnd; row++, col++) {
-				selected_word.push(grid[row][col]);
-			}
-			return selected_word;
-		}
-		else {
-			return []; // Invalid orientation
-		}
-	}
-
+    
 </script>
+
+

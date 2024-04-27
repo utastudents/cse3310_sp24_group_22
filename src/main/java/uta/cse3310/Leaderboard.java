@@ -1,47 +1,18 @@
 package uta.cse3310;
-
-
-import java.util.*;
-
+import java.util.Comparator;
+import java.util.TreeMap;
 
 public class Leaderboard {
-   private Map<String, Player_Data> players = new HashMap<>();
+    public TreeMap<String, Integer> LB;
 
+    public Leaderboard() {
+        // Initialize the TreeMap with a custom comparator to sort by score in descending order
+        LB = new TreeMap<>();
+    }
 
-   public boolean addPlayer(Player_Data player) {
-        String handle = player.getHandle();
-       if (players.containsKey(handle)) {
-           return false; // player already exists
-       }
-
-
-       players.put(handle, player);
-       return true;
-   }
-
-
-   public Player_Data getPlayer(String handle) {
-       return players.get(handle);
-   }
-
-
-   public int getPlayerWins(String handle) {
-       Player_Data playerData = players.get(handle);
-       return playerData != null ? playerData.getWins() : 0;
-   }
-
-
-   public void displayLeaderboard() {
-       List<Player_Data> playerDataList = new ArrayList<>(players.values());
-       playerDataList.sort(Comparator.comparingInt(Player_Data::getScore).reversed());
-
-
-       for (Player_Data playerData : playerDataList) {
-           int totalGames = playerData.getWins() + playerData.getLosses() + playerData.getDraws();
-           System.out.println("Handle: " + playerData.getHandle() + ", Score: " + playerData.getScore() +
-               ", Wins: " + playerData.getWins() + ", Losses: " + playerData.getLosses() +
-               ", Draws: " + playerData.getDraws() + ", Total games: " + totalGames);
-       }
-   }
+    // Method to add a score to the leaderboard
+    public void add(String handle, int score) {
+        LB.put(handle, score);
+    }
 }
 

@@ -1,42 +1,5 @@
-
-// This is example code provided to CSE3310 Fall 2022
-// You are free to use as is, or changed, any of the code provided
-
-// Please comply with the licensing requirements for the
-// open source packages being used.
-
-// This code is based upon, and derived from the this repository
-//            https:/thub.com/TooTallNate/Java-WebSocket/tree/master/src/main/example
-
-// http server include is a GPL licensed package from
-//            http://www.freeutils.net/source/jlhttp/
-
-/*
- * Copyright (c) 2010-2020 Nathan Rajlich
- *
- *  Permission is hereby granted, free of charge, to any person
- *  obtaining a copy of this software and associated documentation
- *  files (the "Software"), to deal in the Software without
- *  restriction, including without limitation the rights to use,
- *  copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following
- *  conditions:
- *
- *  The above copyright notice and this permission notice shall be
- *  included in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- *  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- *  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- *  OTHER DEALINGS IN THE SOFTWARE.
- */
-
 package uta.cse3310;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,235 +17,280 @@ import org.java_websocket.server.WebSocketServer;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-import java.time.Instant;
-import java.time.Duration;
+
+import javax.lang.model.element.Element;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class App extends WebSocketServer {
 
-  // All games currently underway on this server are stored in
-  // the vector ActiveGames
-  // private Vector<Game> ActiveGames = new Vector<Game>();
+    //List of players
+    private HashMap<String, UserEvent> Players = new HashMap<>();
 
-  private int GameId = 1;
 
-  private Lobby theLobby;
-
-  private int connectionId = 0;
-
-  private Instant startTime;
-  // private int gamesinProgress = ActiveGames.size();
-
-  public App(int port) {
-    super(new InetSocketAddress(port));
-  }
-
-  public App(InetSocketAddress address) {
-    super(address);
-  }
-
-  public App(int port, Draft_6455 draft) {
-    super(new InetSocketAddress(port), Collections.<Draft>singletonList(draft));
-  }
-
-  @Override
-  public void onOpen(WebSocket conn, ClientHandshake handshake) {
-    connectionId++;
-    System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
-
-    Player_Data E = new Player_Data();
-
-    // not sure if this is the right place to create the lobby.
-    theLobby = new Lobby();
-
-    // Need to send the clienID to the client. It will be usefull.
-
-    IDMessage ID = new IDMessage();
-    ID.connectionID = connectionId;
-    // send it to the client
-
-    String jsonString = new Gson().toJson(ID);
-    System.out.println(jsonString);
-    conn.send(jsonString);
-
-    // Parse the request from the client
-    // String request = handshake.getResourceDescriptor();
-    // int numPlayers = Integer.parseInt(request.substring(1)); // Assuming request
-    // is "/2", "/3", or "/4"
-
-    // Search for a game with the desired number of players
-    // Game game = null;
-    // for (Game g : activeGames) {
-    // if (g.getNumPlayers() == numPlayers) {
-    // game = g;
-    // System.out.println("Found a match");
-    // break;
-    // }
-    // }
-
-    // // If no matches found, create a new game
-    // if (game == null) {
-    // game = new Game();
-    // game.setGameId(GameId++);
-    // activeGames.add(game);
-    // game.setGamesInProgress(gamesInProgress);
-    // game.setNumPlayers(numPlayers); // Set the number of players for the new game
-    // System.out.println("Creating a new game for " + numPlayers + " players");
-    // }
-
-    // // Add the player to the game
-    // game.addPlayer();
-    // System.out.println("Player added to the game");
-
-    // // If enough players have joined, start the game
-    // if (game.getNumPlayers() == numPlayers) {
-    // game.StartGame();
-    // System.out.println("Game started");
-    // gamesInProgress++;
-    // for (Game g : activeGames) {
-    // g.setGamesInProgress(gamesInProgress);
-    // String jsonString = new Gson().toJson(g);
-    // System.out.println(jsonString);
-    // broadcast(jsonString);
-    // }
-    // }
-
-    // // Send game details to the player who just joined
-    // event.setYouAre(game.getPlayers().get(game.getNumPlayers() - 1)); // Set the
-    // player's type
-    // event.setGameId(game.getGameId());
-    // conn.setAttachment(game);
-
-    // Gson gson = new Gson();
-    // conn.send(gson.toJson(event));
-
-    // // Send the state of the game to everyone
-    // for (Game g : activeGames) {
-    // g.setTotal(total);
-    // String jsonString = gson.toJson(g);
-    // System.out.println(jsonString);
-    // broadcast(jsonString);
-    // }
-  }
-
-  @Override
-  public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-    System.out.println(conn + " has closed");
-    // Retrieve the game tied to the websocket connection
-    // Game G = conn.getAttachment();
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.create();
-
-    // ActiveGames.removeElement(G);
-    // gamesinProgress-=1;
-    // if (gamesinProgress <0)
-    // {
-    // gamesinProgress = 0;
-    // }
-    // for (Game i : ActiveGames)
-    // {
-    // i.gamesinProgress = gamesinProgress;
-
-    // String jsonString;
-    // jsonString = gson.toJson(i);
-
-    // System.out.println(jsonString);
-    // broadcast(jsonString);
-    // }
-    // G =null;
-
-  }
-
-  @Override
-  public void onMessage(WebSocket conn, String message) {
-    System.out.println("< " + Duration.between(startTime,
-        Instant.now()).toMillis() + " " + "-" + " " + escape(message));
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.create();
-    if (message.indexOf("NameMessage") > 0) {
-
-      NameMessage N = gson.fromJson(message, NameMessage.class);
-
-      System.out.println("the name is " + N.name);
-      // put this in the lobby, please.
-      // may need some more information with it, like the connection ID.
-      theLobby.playerList.add(N.name);
-
-    }
-    if (message.indexOf("ChatMessage") > 0) {
-      // for now, lets just send out what was
-      // received.
-      broadcast(message);
-      System.out.println("sending chat message out");
-
-    }
-
+    //Wait Games
+    private ArrayList<String> Wait_game_2;
+    private ArrayList<String> Wait_game_3;
+    private ArrayList<String> Wait_game_4;
+    
+    //Class variables
+    private Color color;
+    private Leaderboard leaderboard;
+    private ArrayList<Coordinate> letters;
+    
+	//List of available games
+	private ArrayList<Game> Games;
+    
+    //Server id
+    private int ser = 1;
+    
+    //Variables 
+    private Game g = null;
+    private ArrayList<String> Selected_Game;
+    private int GId = 1;
+    public String jsonString = "";
+    
+    //Game variables
+   
   
-    // GsonBuilder builder = new GsonBuilder();
-    // Gson gson = builder.create();
-    // Player_Data U = gson.fromJson(message, Player_Data.class);
 
-    // Update the running time
-    // stats.setRunningTime(Duration.between(startTime, Instant.now()).toSeconds());
-
-    // Get our Game Object
-    // Game G = conn.getAttachment();
-    // G.Update(U);
-
-    // send out the lobby state every time
-    // to everyone
-    String jsonString;
-    jsonString = gson.toJson(theLobby);
-
-    System.out
-        .println("> " + Duration.between(startTime, Instant.now()).toMillis() + " " +
-            "*" + " " + escape(jsonString));
-    broadcast(jsonString);
-  }
-
-  @Override
-  public void onMessage(WebSocket conn, ByteBuffer message) {
-    System.out.println(conn + ": " + message);
-  }
-
-  @Override
-  public void onError(WebSocket conn, Exception ex) {
-    ex.printStackTrace();
-    if (conn != null) {
-      // some errors like port binding failed may not be assignable to a specific
-      // websocket
+    public App(int port) {
+        super(new InetSocketAddress(port));
+        initialize();
     }
-  }
 
-  @Override
-  public void onStart() {
-    setConnectionLostTimeout(0);
-    // stats = new Statistics();
-    startTime = Instant.now();
-  }
-
-  private String escape(String S) {
-    // turns " into \"
-    String retval = new String();
-    // this routine is very slow.
-    // but it is not called very often
-    for (int i = 0; i < S.length(); i++) {
-      Character ch = S.charAt(i);
-      if (ch == '\"') {
-        retval = retval + '\\';
-      }
-      retval = retval + ch;
+    public App(InetSocketAddress address) {
+        super(address);
+        initialize();
     }
-    return retval;
-  }
+
+    public App(int port, Draft_6455 draft) {
+        super(new InetSocketAddress(port), Collections.singletonList(draft));
+        initialize();
+    }
+
+    private void initialize() 
+    {
+    	//Initialize all players
+    	//Players = new ArrayList<>();
+    	
+    	//Initialize wait games and number allocated to it
+        Wait_game_2 = new ArrayList<>();
+        Wait_game_2.add("2");
+        
+        Wait_game_3 = new ArrayList<>();
+        Wait_game_3.add("3");
+        
+        Wait_game_4 = new ArrayList<>();
+        Wait_game_4.add("4");
+        
+        //Initial objects
+        color = new Color();
+        leaderboard = new Leaderboard();
+        letters = new ArrayList<>();
+        
+        //Initialize available games
+        Games = new ArrayList<>();
+        Game game1 = new Game(0,0);
+        Game game2 = new Game(0,0);
+        Game game3 = new Game(0,0);
+        Game game4 = new Game(0,0);
+        Game game5 = new Game(0,0);
+        
+        Games.add(game1);
+        Games.add(game2);
+        Games.add(game3);
+        Games.add(game4);
+        Games.add(game5);
+    }
+
+    @Override
+    public void onOpen(WebSocket conn, ClientHandshake handshake) {
+        System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
+		Gson gson = new Gson();
+		//Send out the server id to each user
+		conn.send(gson.toJson(ser));
+		System.out.println(gson.toJson(ser));
+		ser+=1;
+    }
+
+    @Override
+    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+        System.out.println(conn + " has closed");
+    }
+
+    @Override
+    public void onMessage(WebSocket conn, String message) 
+    {
+        // Deserialize the JSON message into a UserEvent object
+        Gson gson = new GsonBuilder().create();
+        UserEvent U = gson.fromJson(message, UserEvent.class);
+        
+        //Just entered the game
+        if (U.ready == -1)
+        {
+        	System.out.println("This is the player: " + U.Uid);
+        	//Assign the color
+        	U.color = color.pickColor();
+        	
+        	//Add the person to the leaderboard
+        	leaderboard.add(U.Handle,0);
+        	
+        	//Add it to all players list
+        	Players.put(U.Handle,U);
+        }
+        
+        //Add them to respective wait list
+        else if (U.ready == 1)
+        {
+        	//Update the players
+        	Players.get(U.Handle).ready = 1;
+
+        	
+        	//Update wait list
+        	if (U.GameType == 2)
+        	{
+        		Wait_game_2.add(U.Handle);
+        		Selected_Game = Wait_game_2;
+        		
+        	}
+        	else if (U.GameType == 3)
+        	{
+        		Wait_game_3.add(U.Handle);
+        		Selected_Game = Wait_game_3;
+        	}
+        	else
+        	{
+        		Wait_game_4.add(U.Handle);
+        		Selected_Game = Wait_game_4;
+        	}
+        	
+        	//Check wait list if there are required number of players for a game
+        	if (((Selected_Game.size()-1) != 0) && ((Selected_Game.size()-1) % U.GameType == 0))
+        	{
+        		//Check if any games are available
+        		for (int j = 0; j < Games.size(); j++)
+        		{
+        			if (Games.get(j).busy == 0)
+        			{
+        				g = Games.get(j);        				
+        			}
+        		}
+        		
+        		
+        		if (g != null)
+        		{
+        			g.busy = 1;
+        			g.GameId = GId;
+        			GId++;
+        			
+        			//Remove the players from wait list if there is a game
+					for (int i = 0; i < U.GameType; i++)
+					{
+						//Add them to the Game
+						g.ID.add(Players.get(Selected_Game.get(1)).Uid);
+						
+						//Change up ready to 0 so it means they are in a game
+						Players.get(Selected_Game.get(1)).ready = 0;
+						
+						//Change up ready to 0 so it means they are in a game
+						Players.get(Selected_Game.get(1)).game = g;						
+												
+						//Remove the person from waitlist
+						Selected_Game.remove(1);
+
+					}
+					
+        		}
+        		g = null;
+        	}
+        }
+
+		//If ready = 0, that means they are already in a game
+        else
+        {
+        	//U.letters are the two letters selected
+			if (U.letters.size() != 0)
+			{
+				//Check if the two letters are of valid orientation
+				//Returns list of letters between two letters OR nothing in it
+				letters = U.game.isValidOrientation(U.letters);
+				System.out.println(letters);
+				
+				//Check if it is a valid word
+				if (Players.get(U.Handle).game.isValidWord(letters))
+				{	
+					//Update the letters to be selected							
+					Players.get(U.Handle).letters = letters;
+					
+					//update leaderboard
+					leaderboard.add(U.Handle,0);				
+				}
+				else
+				{		
+					//If it isnt a valid word then clear out selected letters
+					Players.get(U.Handle).letters.clear();
+				}
+				
+				//Update the players
+				
+			}	
+        }
+        
+        //Send change in state to everyone
+		jsonString = gson.toJson(Wait_game_2);
+		broadcast(jsonString);
+		
+		jsonString = gson.toJson(Wait_game_3);
+		broadcast(jsonString);	   
+		
+		jsonString = gson.toJson(Wait_game_4);
+		broadcast(jsonString);	
+				
+		//Send the leaderboard
+		jsonString = gson.toJson(leaderboard);
+		broadcast(jsonString);   	        
+        
+        //Send player information
+		for (Map.Entry<String, UserEvent> entry : Players.entrySet()) 
+		{
+			
+			jsonString = gson.toJson(entry.getValue());
+			broadcast(jsonString);
+			System.out.println(jsonString);
+		}
+
+    }
+
+    @Override
+    public void onMessage(WebSocket conn, ByteBuffer message) 
+    {
+        //System.out.println(conn + ": " + message);
+    }
+
+    @Override
+    public void onError(WebSocket conn, Exception ex) {
+        ex.printStackTrace();
+        if (conn != null) {
+            // some errors like port binding failed may not be assignable to a specific websocket
+        }
+    }
+
+    @Override
+    public void onStart() {
+        System.out.println("Server started!");
+        setConnectionLostTimeout(0);
+    }
 
   public static void main(String[] args) {
 
     String HttpPort = System.getenv("HTTP_PORT");
     int port = 9022;
-    if (HttpPort != null) {
+    if (HttpPort!=null) {
       port = Integer.valueOf(HttpPort);
     }
 
@@ -294,16 +302,19 @@ public class App extends WebSocketServer {
 
     // create and start the websocket server
 
-    int Web_port = 9122;
+    port = 9122;
     String WSPort = System.getenv("WEBSOCKET_PORT");
-    if (WSPort != null) {
-      Web_port = Integer.valueOf(WSPort);
+    if (WSPort!=null)
+    {
+      port = Integer.valueOf(WSPort);
     }
 
-    App A = new App(Web_port);
+    App A = new App(port);
     A.setReuseAddr(true);
     A.start();
-    System.out.println("websocket Server started on port: " + Web_port);
+    System.out.println("websocket Server started on port: " + port);
 
   }
 }
+
+
