@@ -58,7 +58,7 @@ jobs:
            ssh production 'echo "Environment=VERSION=\"${{ github.sha }}\"" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
            ssh production 'echo "Environment=WEBSOCKET_PORT=${{ vars.WEBSOCKET_PORT }}" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
            ssh production 'echo "Environment=HTTP_PORT=${{ vars.HTTP_PORT }}" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
-           ssh production 'echo "ExecStart=mvn exec:java -Dexec.mainClass=com.cse3310.App" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
+           ssh production 'echo "ExecStart=mvn exec:java -Dexec.mainClass=uta.cse3310.App" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
            ssh production 'echo "WorkingDirectory=$PWD/${{ github.event.repository.name }}" >> .config/systemd/user/${{ vars.SERVICE_NAME }}.service'
            ssh production 'echo "[Install]" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
            ssh production 'echo "WantedBy=default.target" >>.config/systemd/user/${{ vars.SERVICE_NAME }}.service'
