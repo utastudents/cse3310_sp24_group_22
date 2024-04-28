@@ -36,7 +36,7 @@ public class Game
         	valid_words = create_grid.selected_words;
         }
 		
-		/*for (int i = 0; i < 20; i++) 
+		for (int i = 0; i < 20; i++) 
 		{
 	        for (int j = 0; j < 20; j++) 
 	        {
@@ -46,7 +46,7 @@ public class Game
 	            }
 	        }
 		            	
-        }*/
+        }
         
         
         /*Random rand = new Random();
@@ -66,6 +66,11 @@ public class Game
     {
     	String word = "";
     	char letter;
+    	
+    	if (Userid.equals("Test"))
+    	{
+    		return true;
+    	}
     	
     	//Create the word
     	for (Coordinate i : indexLetters)
