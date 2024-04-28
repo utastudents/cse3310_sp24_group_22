@@ -46,7 +46,7 @@ public class Create_Grid {
         return true;
     }
 
-    private boolean populateBoardWithWords() {
+    public boolean populateBoardWithWords() {
         Random random = new Random();
         int wordsPlaced = 0;
         double totalCells = boardLength * boardWidth;
@@ -69,7 +69,7 @@ public class Create_Grid {
         
     }
 
-    private boolean placeWord(String word, int startX, int startY, int orientation) {
+    public boolean placeWord(String word, int startX, int startY, int orientation) {
         int wordLength = word.length();
         int deltaX = 0, deltaY = 0;
 
