@@ -33,7 +33,9 @@ public class Create_Grid {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String word;
             while ((word = br.readLine()) != null) {
-                validWords.add(word.trim().toUpperCase());
+                if(word.length() > 3){
+                    validWords.add(word.trim().toUpperCase());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
