@@ -22,7 +22,10 @@ import javax.lang.model.element.Element;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +40,9 @@ public class App extends WebSocketServer {
     private ArrayList<String> Wait_game_3;
     private ArrayList<String> Wait_game_4;
     
+    //Chat
+    private ChatBox Chat;
+
     //Class variables
     private Color color;
     private Leaderboard leaderboard;
@@ -106,6 +112,9 @@ public class App extends WebSocketServer {
         Games.add(game3);
         Games.add(game4);
         Games.add(game5);
+
+        // Initialize chatbox
+        Chat = new ChatBox();
     }
 
     @Override
@@ -138,6 +147,17 @@ public class App extends WebSocketServer {
     {
         // Deserialize the JSON message into a UserEvent object
         Gson gson = new GsonBuilder().create();
+        
+        if (message.contains("Message")) {
+            System.out.println("Received chat: " + message);
+            Message M = gson.fromJson(message, Message.class);
+            Chat.add(M);
+
+            // TBH we can just send the message back to everyone
+            broadcast(gson.toJson(M));
+            return;
+        }
+        
         UserEvent U = gson.fromJson(message, UserEvent.class);
         
         //Just entered the game
@@ -153,6 +173,10 @@ public class App extends WebSocketServer {
         	//Add it to all players list
         	Players.put(U.Handle,U);
         	conn.setAttachment(U.Handle);
+            
+            //Send them the chatbox
+            System.out.println(gson.toJson(Chat));
+            conn.send(gson.toJson(Chat));
         }
         
         //Add them to respective wait list
@@ -298,6 +322,11 @@ public class App extends WebSocketServer {
     public void onMessage(WebSocket conn, ByteBuffer message) 
     {
         //System.out.println(conn + ": " + message);
+        // chat.add_message(message);
+/* 
+        String jsonMsg = gson.toJson(chat);
+        broadcast(message);
+        System.out.println(jsonMsg); */
     }
 
     @Override

@@ -65,11 +65,14 @@
     <br>
     
     <h2>Chat</h2>
-    <input type="text" id="chat-input" name="chat-input" placeholder="Enter your message">
-    <button type="button" id="chat-send">Send</button>
-    <div id="chat-messages">
-        <table></table>
+    <div>
+        <table id="chat_messages">
+		</table>
     </div>
+	<form id="chat">
+		<input type="text" id="chat-input" name="chat-input" placeholder="Enter your message">
+		<button type="button" id="chat-send" onclick="sendMessage()">Send</button>
+	</form>
 </div>
 
 <div id="Game" style="display: none;">
@@ -140,6 +143,16 @@
 		constructor()
 		{
 			this.LB = null;
+		}
+	}
+
+// Represents a message in the chatbox
+	class Message
+	{
+		constructor(handle, msg)
+		{
+			this.Handle = handle;
+			this.Message = msg;
 		}
 	}
 	
@@ -225,12 +238,14 @@
 		//Assign each server to a userid
 		if (!isNaN(receivedData)) 
 		{		
+			console.log("entered empty");
         	userid = parseInt(receivedData);
     	}
     	
     	//Checks if it is a waiting list
     	else if (Array.isArray(JSON.parse(event.data)))
     	{
+			console.log("Entered array");
 			//Remove lobby and show the game
 			//document.getElementById("Lobby").style.display = "block";
 			//document.getElementById("Game").style.display = "none";
@@ -257,7 +272,29 @@
 				document.getElementById("Game4_waiting").innerHTML = waiting_list;
 			}
     	}
-    	
+		// Populate chat
+		else if (receivedData.includes("messages"))
+		{
+			console.log("Handling several messages...");
+			chatevent = JSON.parse(event.data);
+			
+			for (var i = 0; i < chatevent.messages.length; i++)
+			{
+				var row = chat_messages.insertRow();
+				var info = row.insertCell();
+				info.innerHTML = chatevent.messages[i].Handle + ": " + chatevent.messages[i].Message;
+			}
+		}
+    	// Get chat event
+		else if (receivedData.includes("Message"))
+		{
+			console.log("Handling one message...");
+			chatevent = JSON.parse(event.data);
+
+			var row = chat_messages.insertRow();
+			var info = row.insertCell();
+			info.innerHTML = chatevent.Handle + ": " + chatevent.Message;
+		}
     	//Get User events
     	else if (receivedData.includes("Handle"))
     	{
@@ -495,7 +532,17 @@ function startGameTimer()
         display = document.querySelector('#timer');
     startTimer(threeMinutes, display);
 }
-	
+
+function sendMessage()
+{
+	username = document.getElementById("username").value;
+	msg = document.getElementById("chat-input").value;
+	M = new Message(username, msg);
+
+	console.log(JSON.stringify(M));
+	connection.send(JSON.stringify(M));
+	document.getElementById("chat-input").value = "";
+}
 
     
 </script>
