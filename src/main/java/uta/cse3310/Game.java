@@ -18,14 +18,38 @@ public class Game
     	this.busy = busy;
     	this.GameId = GameId;
 		ID = new ArrayList<>();
+		valid_words = new ArrayList<>();
+		
+		
 		identified_words = new ArrayList<>();
 		grid = createGrid();
     }
 
 	char[][] createGrid() 
 	{
+		Random rand = new Random();
+		Create_Grid create_grid = new Create_Grid(20,20,0.67);
         char[][] grid = new char[20][20];
-        Random rand = new Random();
+        if (create_grid.initializeBoard("files.txt"))
+        {
+        	grid = create_grid.boardArray;
+        	valid_words = create_grid.selected_words;
+        }
+		
+		/*for (int i = 0; i < 20; i++) 
+		{
+	        for (int j = 0; j < 20; j++) 
+	        {
+	            if (grid[i][j] == '#')
+	            {
+	            	grid[i][j] = (char) (rand.nextInt(26) + 'A');
+	            }
+	        }
+		            	
+        }*/
+        
+        
+        /*Random rand = new Random();
 
         for (int i = 0; i < 20; i++) 
         {
@@ -33,7 +57,7 @@ public class Game
             {
                 grid[i][j] = (char) (rand.nextInt(26) + 'A');
             }
-        }
+        }*/
 
         return grid;
     }
@@ -52,11 +76,11 @@ public class Game
     	
     	System.out.println(word);
     	
-    	identified_words.add(ID.indexOf(Userid)+word);
+    	
     	//Check if the word exists even in the valid_words
     	
     	//If it is valid return true
-		/*if (valid_words.contains(word))
+		if (valid_words.contains(word))
 		{
 			//Add the word and the index of the id in the beginning of the word
 			identified_words.add(ID.indexOf(Userid)+word);
@@ -66,10 +90,10 @@ public class Game
 		//Return false because the word isnt there
 		else
 		{
-			return true;
-		}*/
+			return false;
+		}
 		
-		return true;
+		//return true;
 		
 
     }
@@ -91,11 +115,22 @@ public class Game
         } 
         else if (indexLetters.get(0).row == indexLetters.get(1).row) 
         {
-            // Horizontal orientation
-            for (int i = Math.min(indexLetters.get(0).col, indexLetters.get(1).col); i <= Math.max(indexLetters.get(0).col, indexLetters.get(1).col); i++) 
+            // Horizontal orientation reverse
+            if (indexLetters.get(0).col>indexLetters.get(1).col)
             {
-                selectedLetters.add(new Coordinate(indexLetters.get(0).row, i));
-            }
+		        for (int i = indexLetters.get(0).col; i >= indexLetters.get(1).col; i--) 
+			    {
+			        selectedLetters.add(new Coordinate(indexLetters.get(0).row, i));
+			    }
+		    }
+		    else
+		    {
+		        for (int i = indexLetters.get(0).col; i <= indexLetters.get(1).col; i++) 
+			    {
+			        selectedLetters.add(new Coordinate(indexLetters.get(0).row, i));
+			    }
+		    }		    	
+		    
         } 
         else if (rowDiff == colDiff) 
         {
@@ -106,9 +141,44 @@ public class Game
             int colEnd = Math.max(indexLetters.get(0).col, indexLetters.get(1).col);
 
             // Traverse the diagonal
-            for (int row = rowStart, col = colStart; row <= rowEnd && col <= colEnd; row++, col++) 
+          
+            if (indexLetters.get(0).col>indexLetters.get(1).col)
             {
-                selectedLetters.add(new Coordinate(row, col));
+            	if (indexLetters.get(0).row>indexLetters.get(1).row)
+            	{
+            	           
+					for (int row = indexLetters.get(0).row, col = indexLetters.get(0).col; row >= indexLetters.get(1).row && col >= indexLetters.get(1).col; row--, col--) 
+					{
+					    selectedLetters.add(new Coordinate(row, col));
+					}
+		        
+		        }
+		        else
+		        {
+					for (int row = indexLetters.get(0).row, col = indexLetters.get(0).col; row <= indexLetters.get(1).row && col >= indexLetters.get(1).col; row++, col--) 
+					{
+					    selectedLetters.add(new Coordinate(row, col));
+					}		        	
+		        }
+            }
+            else
+            {
+            	if (indexLetters.get(0).row>indexLetters.get(1).row)
+            	{
+            	           
+					for (int row = indexLetters.get(0).row, col = indexLetters.get(0).col; row >= indexLetters.get(1).row && col <= indexLetters.get(1).col; row--, col++) 
+					{
+					    selectedLetters.add(new Coordinate(row, col));
+					}
+		        
+		        }
+		        else
+		        {
+					for (int row = indexLetters.get(0).row, col = indexLetters.get(0).col; row <= indexLetters.get(1).row && col <= indexLetters.get(1).col; row++, col++) 
+					{
+					    selectedLetters.add(new Coordinate(row, col));
+					}		        	
+		        }            
             }
         }
 		else
