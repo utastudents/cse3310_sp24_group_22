@@ -36,7 +36,7 @@ public class GameTest {
         // Add some coordinates to the list
         indexLetters.add(new Coordinate(1, 2));
         indexLetters.add(new Coordinate(1, 3));
-        assertTrue(game.isValidWord(indexLetters));
+        assertTrue(game.isValidWord(indexLetters,"user1"));
     }
 
     @Test
