@@ -6,10 +6,12 @@ public class Game
 {
 	public int busy;
 	public int GameId;
-	public ArrayList<Integer> ID;
+	public ArrayList<String> ID;
 	public char[][] grid = new char[20][20];
-	public char[] word;
+	//public char[] word;
 	public ArrayList<String> identified_words;
+	public ArrayList<String> valid_words;
+	
 
     Game(int busy, int GameId) 
     {
@@ -36,9 +38,40 @@ public class Game
         return grid;
     }
     
-    boolean isValidWord(ArrayList<Coordinate> indexLetters)
+    boolean isValidWord(ArrayList<Coordinate> indexLetters, String Userid)
     {
-    	return true;
+    	String word = "";
+    	char letter;
+    	
+    	//Create the word
+    	for (Coordinate i : indexLetters)
+    	{
+    		letter = grid[i.row][i.col-1];
+    		word+=letter;
+    	}
+    	
+    	System.out.println(word);
+    	
+    	identified_words.add(ID.indexOf(Userid)+word);
+    	//Check if the word exists even in the valid_words
+    	
+    	//If it is valid return true
+		/*if (valid_words.contains(word))
+		{
+			//Add the word and the index of the id in the beginning of the word
+			identified_words.add(ID.indexOf(Userid)+word);
+			return true;
+		}
+		
+		//Return false because the word isnt there
+		else
+		{
+			return true;
+		}*/
+		
+		return true;
+		
+
     }
     
 	static ArrayList<Coordinate> isValidOrientation(ArrayList<Coordinate> indexLetters) 
@@ -78,13 +111,25 @@ public class Game
                 selectedLetters.add(new Coordinate(row, col));
             }
         }
-        else
-        {
-        	
-        }
+		else
+		{
+		
+		}
 
         return selectedLetters;
     }
+    
+    boolean GameOver()
+    {
+		if (valid_words.size()==identified_words.size())
+		{
+			return true;
+		}
+		return false;
+    }
+    
+    
+    
 }
     
 

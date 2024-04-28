@@ -203,7 +203,7 @@ public class App extends WebSocketServer {
 					for (int i = 0; i < U.GameType; i++)
 					{
 						//Add them to the Game
-						g.ID.add(Players.get(Selected_Game.get(1)).Uid);
+						g.ID.add(Players.get(Selected_Game.get(1)).Handle);
 						
 						//Change up ready to 0 so it means they are in a game
 						Players.get(Selected_Game.get(1)).ready = 0;
@@ -221,7 +221,20 @@ public class App extends WebSocketServer {
         	}
         }
         
+        //Game is over and post summary
+        else if (U.ready == 2)
+        {
 
+        }
+		
+		//moving back to lobby
+		else if (U.ready == 3)
+		{
+        	Players.get(U.Handle).game.busy = 0;
+        	Players.get(U.Handle).game = null;
+        	Players.get(U.Handle).ready = -1;
+        	Players.get(U.Handle).letters.clear();			
+		}
 		//If ready = 0, that means they are already in a game
         else
         {
@@ -234,7 +247,7 @@ public class App extends WebSocketServer {
 				System.out.println(letters);
 				
 				//Check if it is a valid word
-				if (Players.get(U.Handle).game.isValidWord(letters))
+				if (Players.get(U.Handle).game.isValidWord(letters,U.Handle))
 				{	
 					//Update the letters to be selected							
 					Players.get(U.Handle).letters = letters;
@@ -248,8 +261,11 @@ public class App extends WebSocketServer {
 					Players.get(U.Handle).letters.clear();
 				}
 				
-				//Update the players
-				
+				//Check if game is over
+				/*if (Players.get(U.Handle).game.GameOver())
+				{
+					
+				}*/
 			}	
         }
         
