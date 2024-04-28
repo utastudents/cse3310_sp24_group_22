@@ -73,7 +73,13 @@
 </div>
 
 <div id="Game" style="display: none;">
-	<div id = "table" style="order: -1;">
+    <div id="PlayersAndWords" style="width: 200px; order: -1;">
+        <h2>Players and Words</h2>
+        <table id="PlayersAndWords_table">
+        </table>
+    </div>
+    
+	<div id = "table" style="order: 0;">
 		<h1>Game</h1>
 
 		<table id="Grid">
@@ -90,13 +96,15 @@
 			</tr>
 		</table>
     </div>
-    <div id="timer">3:00</div>
+    <div id="timer">1:00</div>
 </div>
 
 
 
 
 <script>
+
+//UserEvent defined
 	class UserEvent 
 	{
 		constructor() 
@@ -110,7 +118,9 @@
 			this.letters = [];
 		}
 	}
-	
+
+
+//Coordinate: row, column representing indexes of the letters	
 	class Coordinate
 	{
 		constructor(row,col)
@@ -119,6 +129,8 @@
 			this.col = col;
 		}
 	}
+	
+// Represents the leaderboard
 	class Leaderboard
 	{
 		constructor()
@@ -133,16 +145,20 @@
 	
     var connection = null;
     var serverUrl = "ws://" + window.location.hostname + ":9122";
-   	var username = null;
-   	var gametype = null;
+   	
+   	var username = null; //Unique to each user
+   	
+   	var gametype = null; //Cant be changed after selected
    	var ready = -1;
    	
 
 	
-	var Game = null;
-	var no_clicks = 0;
-	var selected_letters = [];
-	var selected_word = null;
+	var Game = null; //By default user isnt in a game
+	
+	var no_clicks = 0; //No. of clicks done by user 
+	var selected_letters = []; //The letters clicked on and letters between those two selected letters
+	
+	var selected_word = null; 
 	var button = null;
 	var number = 1;
 	var array_list = null;
@@ -150,7 +166,7 @@
 	var state_timer = false;
 	
 	var leaderboard_list = [];
-	
+	var Player_table = document.getElementById("PlayersAndWords");
 	for (var i = 0; i < 20; i++) 
 	{
 		var buttonTable = document.getElementById("Grid");
@@ -210,6 +226,9 @@
     	//Checks if it is a waiting list
     	else if (Array.isArray(JSON.parse(event.data)))
     	{
+			//Remove lobby and show the game
+			//document.getElementById("Lobby").style.display = "block";
+			//document.getElementById("Game").style.display = "none";
     		var waiting_list = "";
     		array_list = JSON.parse(event.data);
     		//Add the people to waiting list
@@ -241,7 +260,7 @@
     		userevent = JSON.parse(event.data);
     		
     		//Check if it is in a game and if this server has this userid
-			if ((userevent.ready === 0) && (userevent.game.ID.includes(userid)))
+			if ((userevent.ready === 0) && (userevent.game.ID.includes(username)))
 			{
 				console.log(userevent.game.ID);
 				//Remove lobby and show the game
@@ -253,6 +272,7 @@
 					startGameTimer();
 					state_timer = true;
 				}
+				Game = userevent.game; 
 				
 				//Assign the grid with each letter
 				var number = 1;
@@ -272,12 +292,31 @@
 					var buttonId = userevent.letters[i].row * 20 + userevent.letters[i].col;
 					button = document.getElementById(buttonId);
 					button.style.backgroundColor = userevent.color;
-				} 																		
+				}
+				
+				
+				PlayersAndWords_table.innerHTML = "";
+				for (var i = 0; i<userevent.game.ID.length; i++)
+				{		
+					var row = PlayersAndWords_table.insertRow();
+					var info = row.insertCell(0);	
+					info.textContent = userevent.game.ID[i];
+						
+					for (var j = 0; j < userevent.game.identified_words.length; j++)
+					{
+						if (parseInt(userevent.game.identified_words[j][0]) === i)
+						{
+							row = PlayersAndWords_table.insertRow();
+							info = row.insertCell(0);
+							info.textContent = userevent.game.identified_words[j].substr(1);							
+						}
+
+												
+					}
+				}
 			}		   		
     	}
     	
-    	// Assuming 'receivedData' contains the TreeMap data
-		//else if ('LB' in receivedData) 
 		else
 		{
 			var sent_LB = JSON.parse(event.data);
@@ -290,25 +329,13 @@
 		
 			for (var key in sent_LB.LB) 
 			{
-				/*if (leaderboard_list.includes(key))
-				{
-					for (var i = 0; i < LeaderBoardTable.rows.length; i++)
-					{
-						if (LeaderBoardTable.rows[i].cells[0].textContent === key)
-						{
-							LeaderBoardTable.rows[i].cells[1].textContent = sent_LB.LB[key];
-						}
-					}
-				}
-				else
-				{*/
-					//leaderboard_list.push(key);
-					var row = LeaderBoardTable.insertRow();
-					var cell1 = row.insertCell(0);
-					var cell2 = row.insertCell(1);
-					
-					cell1.textContent = key;
-					cell2.textContent = sent_LB.LB[key];
+
+				var row = LeaderBoardTable.insertRow();
+				var cell1 = row.insertCell(0);
+				var cell2 = row.insertCell(1);
+				
+				cell1.textContent = key;
+				cell2.textContent = sent_LB.LB[key];
 				
     		}
 		}
@@ -430,14 +457,21 @@ function startTimer(duration, display)
         {
             clearInterval(timerInterval);
             // Perform actions when the timer reaches zero
-            alert("Time's up!");
+            //alert("Time's up!");
+			U = new UserEvent();
+			U.Handle = username;
+			U.GameType = gametype;
+			U.ready = 2;
+			U.game = Game;
+			U.Uid = userid;
+			connection.send(JSON.stringify(U));            
         }
     }, 1000);
 }
 
 function startGameTimer() 
 {
-    var threeMinutes = 60 * 3, // 3 minutes in seconds
+    var threeMinutes = 60 * 1, // 3 minutes in seconds
         display = document.querySelector('#timer');
     startTimer(threeMinutes, display);
 }
