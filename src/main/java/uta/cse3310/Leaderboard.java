@@ -32,8 +32,9 @@ public class Leaderboard {
     {
     	int new_score = score + LB.get(handle);
         LB.put(handle, new_score);
-		scores.remove(score);
-		names.remove(handle);
+		int i = names.indexOf(handle);
+		names.remove(i);
+		scores.remove(i);
 		scores.add(new_score);
 		Collections.sort(scores);
 		if(scores.indexOf(new_score) >= names.size())
