@@ -34,7 +34,7 @@ public class Leaderboard {
         LB.put(handle, new_score);
 		scores.remove(score);
 		names.remove(handle);
-		scores.add(new_score)
+		scores.add(new_score);
 		Collections.sort(scores);
 		if(scores.indexOf(new_score) > names.length())
 		{
