@@ -16,7 +16,7 @@ public class Leaderboard {
             }  
         });  
         // Create a new TreeMap using the sorted list  
-        Tre<String, Integer> sortedScore = new TreeMap<>();  
+        TreeMap<String, Integer> sortedScore = new TreeMap<>();  
 
     }
 
