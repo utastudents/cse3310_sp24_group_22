@@ -17,7 +17,7 @@ public class Leaderboard {
     public void add(String handle, int score) {
         LB.put(handle, score);
 		scores.add(score);
-		Collections.sort(scores, reverseOrder());
+		Collections.sort(scores, Collections.reverseOrder());
 		if(scores.indexOf(score) > names.size())
 		{
 			names.add(handle);
@@ -36,7 +36,7 @@ public class Leaderboard {
 		names.remove(i);
 		scores.remove(i);
 		scores.add(new_score);
-		Collections.sort(scores, reverseOrder());
+		Collections.sort(scores, Collections.reverseOrder());
 		if(scores.indexOf(new_score) > names.size())
 		{
 			names.add(handle);
