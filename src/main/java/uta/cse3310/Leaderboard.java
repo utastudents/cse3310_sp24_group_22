@@ -5,36 +5,31 @@ import java.util.*;
 
 public class Leaderboard {
     public TreeMap<String, Integer> LB;
-	public Map sortedScore;
+	public SortedSet sortedScore;
 
-	public static <K, V extends Comparable<V> > Map<K, V> sortScores(final Map<K, V> map) 
-	{  
-		Comparator<K> valueComparator = new Comparator<K>() 
-		{ 
-			public int compare(K k1, K k2) 
-			{ 
-				int comp = map.get(k1).compareTo(map.get(k2)); 
-				if (comp == 0) 
-					return 1; 
-				else
-					return comp; 
-			} 
-		}; 
-		Map<K, V> sorted = new TreeMap<K, V>(valueComparator); 
-		sorted.putAll(map); 
-		return sorted; 
-	} 
+	static <K,V extends Comparable<V super V>> SortedSet<Map.Entry<K,V>> sortingScore(Map<K,V> map) {
+        SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<Map.Entry<K,V>>(
+            new Comparator<Map.Entry<K,V>>() {
+                @Override public int compare(Map.Entry<K,V> e1, Map.Entry<K,V> e2) {
+                    int res = e1.getValue().compareTo(e2.getValue());
+                    return res != 0 ? res : 1; // Special fix to preserve items with equal values
+                }
+            }
+        );
+        sortedEntries.addAll(map.entrySet());
+        return sortedEntries;
+    }
 
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
-		sortedScore = new Map();
+		sortedScore = new SortedSet();
     }
     // Method to add a score to the leaderboard
     public void add(String handle, int score) {
         LB.put(handle, score);
 		sortedScore.clear();
-        sortedScore = sortScores(LB);
+        sortedScore = sortingScore(LB);
     }
     
     public void update(String handle, int score)
@@ -42,7 +37,7 @@ public class Leaderboard {
     	int new_score = score + LB.get(handle);
         LB.put(handle, new_score);
 		sortedScore.clear();
-        sortedScore = sortScores(LB);
+        sortedScore = sortingScores(LB);
     }
     
     public void remove(String handle)
@@ -51,7 +46,7 @@ public class Leaderboard {
     	{
             LB.remove(handle);
 			sortedScore.clear();
-        	sortedScore = sortScores(LB);
+        	sortedScore = sortingScores(LB);
     	}
     }
 }
