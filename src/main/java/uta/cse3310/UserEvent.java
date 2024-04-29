@@ -9,6 +9,7 @@ public class UserEvent
     public int Uid;
     public String color;
     public int ready;
+    public boolean timer_done;
     public Game game;
     public ArrayList<Coordinate> letters;
 

@@ -194,14 +194,42 @@ public class Game
         return selectedLetters;
     }
     
-    boolean GameOver()
-    {
-		if (valid_words.size()==identified_words.size())
-		{
-			return true;
+	ArrayList<String> GameOver(boolean timer_done) 
+	{
+		ArrayList<Integer> scores = new ArrayList<>();
+		ArrayList<String> names_winners = new ArrayList<>();
+		int max_count = 0;
+		
+		if (valid_words.size() == identified_words.size() || timer_done) {
+		    for (int i = 0; i < ID.size(); i++) 
+		    {
+		        int temp_count = 0; // Reset temp_count for each player
+		        for (String word : identified_words) 
+		        {
+		            if (Character.getNumericValue(word.charAt(0)) == i) 
+		            {
+		                temp_count++;
+		            }
+		        }
+		        scores.add(temp_count);
+		        if (temp_count > max_count) 
+		        {
+		            max_count = temp_count;
+		        }
+		    }
+		    
+		    for (int i = 0; i < scores.size(); i++) 
+		    {
+		        if (scores.get(i) == max_count) 
+		        {
+		            names_winners.add(ID.get(i));
+		        }
+		    }
 		}
-		return false;
-    }
+		    
+		return names_winners;
+	}
+
     
     
     

@@ -4,39 +4,42 @@ import java.util.TreeMap;
 
 public class Summary {
 	
-	public TreeMap<Integer, String> Summary_list;
+	public TreeMap<String, String> Summary_list;
 	
 	public Summary()
 	{
 		Summary_list = new TreeMap<>();
 	}
 	
-    TreeMap<Integer, String> Create_Summary(ArrayList<Integer> UId, int winner)
+    void Create_Summary(ArrayList<String> UId, ArrayList<String> winner)
     {
-		
-		if (winner == -1)
+		if (UId.size()==winner.size())
 		{
-			for (int i : UId)
+			for (String k : UId)
 			{
-				Summary_list.put(i, "tie");
+				Summary_list.put(k, "tie");
 			}			
 		}
 		else
 		{
-			for (int i : UId)
+			for (int i = 0; i < winner.size(); i++)
 			{
-				if (i == winner)
+
+				for (String m : UId)
 				{
-					Summary_list.put(i, "win");
+					if (winner.get(i).equals(m))
+					{
+						Summary_list.put(m, "win");
+					}
+					else
+					{
+						Summary_list.put(m, "lose");
+					}
 				}
-				else
-				{
-					Summary_list.put(i, "lose");
-				}
+				
 			}
 		}
 		
-		return Summary_list;
 		
     }
     

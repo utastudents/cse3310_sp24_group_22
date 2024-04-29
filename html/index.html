@@ -106,6 +106,9 @@
     </div>
 </div>
 
+<div id = "Summary" class="popup" style="display: none;">
+	
+</div>	
 
 
 
@@ -155,8 +158,15 @@
 			this.Message = msg;
 		}
 	}
-	
-	
+
+//Represents summary	
+	class Summary
+	{
+		constructor()
+		{
+			this.Summary_list = null;
+		}
+	}	
    	
 	var userid = -1; //Unique to each user
 	
@@ -306,10 +316,11 @@
 			{
 				console.log(userevent.game.ID);
 				//Remove lobby and show the game
+				console.log("I am removing lobby and showing game");
 				document.getElementById("Lobby").style.display = "none";
 				document.getElementById("Game").style.display = "flex";
 				
-				if (state_timer == false)
+				if (state_timer === false)
 				{
 					startGameTimer();
 					state_timer = true;
@@ -334,6 +345,7 @@
 					for (var k = 0; k < 20; k++) 
 					{
 						var button = document.getElementById(number);
+						
 						button.textContent = userevent.game.grid[i][k];
 						number++;
 					}
@@ -373,7 +385,43 @@
 				}
 			}		   		
     	}
-    	
+    	else if (receivedData.includes("Summary_list"))
+    	{
+    		summary = JSON.parse(event.data);
+    		//document.getElementById('Summary')
+    		var summaryDiv = document.getElementById('Summary');
+ 			for (var key in summary.Summary_list) 
+			{
+
+				if (key === username)
+				{
+					summaryDiv.textContent = "You " + summary.Summary_list[key];
+				}
+
+    		}
+    		   		
+			var button1 = document.createElement("button");
+			button1.textContent = "Okay";
+			button1.id = "OKAY";
+			button1.addEventListener('click', okay);
+			summaryDiv.appendChild(button1);
+						
+			summaryDiv.style.display = "block";
+			summaryDiv.style.position = "absolute";
+			summaryDiv.style.zIndex = "999";
+			summaryDiv.style.top = "50%";
+			summaryDiv.style.left = "50%";
+			summaryDiv.style.transform = "translate(-50%, -50%)";
+			summaryDiv.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+			summaryDiv.style.width = "800px"; // Adjust the width as needed
+			summaryDiv.style.height = "400px"; // Adjust the height as needed
+			summaryDiv.style.padding = "20px"; // Add padding to center the content
+			summaryDiv.style.textAlign = "center"; // Center the text horizontally
+			summaryDiv.style.borderRadius = "5px";
+			summaryDiv.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.3)";
+			summaryDiv.style.fontSize = "30px";
+
+    	}
 		else
 		{
 			var sent_LB = JSON.parse(event.data);
@@ -409,7 +457,17 @@
 		if (radioButton.checked)
 		{
 			U.ready = 1;
-			
+			var number = 1;
+			for (var i = 0; i < 20; i++) 
+			{
+				for (var k = 0; k < 20; k++) 
+				{
+					var button = document.getElementById(number);
+					button.style.backgroundColor = "transparent";
+					number++;
+				}
+			}	
+			state_timer = false; 			
 		}
 		else
 		{
@@ -445,7 +503,8 @@
 			
 			connection.send(JSON.stringify(U));
 			console.log(JSON.stringify(U));         	
-        							         
+        						
+        	console.log("I am showing the lobby and hiding basic info")	         ;
            // Show the lobby form
             document.getElementById("Lobby").style.display = "block";
             // Hide the basic info form
@@ -497,6 +556,30 @@
 			
 	}
 
+function okay()
+{
+	console.log("I am showing lobby and hiding game and summary");
+	document.getElementById("Lobby").style.display = "block";
+	document.getElementById("Game").style.display = "none";
+	document.getElementById("Summary").style.display = "none";
+
+	var checkbox = document.getElementById('ready');
+	checkbox.checked = false;
+		
+   	var checkbox = document.getElementById('not_ready');
+	checkbox.checked = true;
+	
+	U = new UserEvent();
+	U.Handle = username;
+	U.ready = 2;
+
+	connection.send(JSON.stringify(U));
+	
+	
+}
+
+
+
 function startTimer(duration, display) 
 {
     var timer = duration, minutes, seconds;
@@ -518,10 +601,12 @@ function startTimer(duration, display)
 			U = new UserEvent();
 			U.Handle = username;
 			U.GameType = gametype;
-			U.ready = 2;
+			U.ready = 0;
 			U.game = Game;
 			U.Uid = userid;
-			connection.send(JSON.stringify(U));            
+			U.letters.length = 0;
+			U.timer_done = true;
+			connection.send(JSON.stringify(U));           
         }
     }, 1000);
 }
@@ -530,7 +615,7 @@ function startGameTimer()
 {
     var threeMinutes = 60 * 1, // 3 minutes in seconds
         display = document.querySelector('#timer');
-    startTimer(threeMinutes, display);
+    startTimer(30, display);
 }
 
 function sendMessage()

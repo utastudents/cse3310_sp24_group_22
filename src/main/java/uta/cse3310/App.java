@@ -134,12 +134,32 @@ public class App extends WebSocketServer {
         String user = conn.getAttachment();
         System.out.println(user);
         leaderboard.remove(user);
+		//Update wait list
+    	if (Players.get(user).GameType == 2)
+    	{
+    		Wait_game_2.remove(user);
+    		Selected_Game = Wait_game_2;
+    		
+    	}
+    	else if (Players.get(user).GameType == 3)
+    	{
+    		Wait_game_2.remove(user);
+    		Selected_Game = Wait_game_3;
+    	}
+    	else
+    	{
+    		Wait_game_2.remove(user);
+    		Selected_Game = Wait_game_4;
+    	}
+
         Players.remove(user);
+
 
 		Gson gson = new GsonBuilder().create();
 		String jsonString = gson.toJson(leaderboard);
 		broadcast(jsonString);  
-        
+		jsonString = gson.toJson(Selected_Game);
+		broadcast(jsonString);        
     }
 
     @Override
@@ -174,6 +194,24 @@ public class App extends WebSocketServer {
         	//Add it to all players list
         	Players.put(U.Handle,U);
         	conn.setAttachment(U.Handle);
+        	
+			if (Players.get(U.Handle).GameType == 2)
+			{
+				Wait_game_2.remove(U.Handle);
+				Selected_Game = Wait_game_2;
+				
+			}
+			else if (Players.get(U.Handle).GameType == 3)
+			{
+				Wait_game_2.remove(U.Handle);
+				Selected_Game = Wait_game_3;
+			}
+			else
+			{
+				Wait_game_2.remove(U.Handle);
+				Selected_Game = Wait_game_4;
+			}
+
             
             //Send them the chatbox
             System.out.println(gson.toJson(Chat));
@@ -246,20 +284,19 @@ public class App extends WebSocketServer {
         	}
         }
         
-        //Game is over and post summary
-        else if (U.ready == 2)
-        {
 
-        }
-		
 		//moving back to lobby
-		else if (U.ready == 3)
+		else if (U.ready == 2)
 		{
-        	Players.get(U.Handle).game.busy = 0;
+        	Game game = new Game(0,0);
+        	Games.remove(Players.get(U.Handle).game);
         	Players.get(U.Handle).game = null;
+        	Games.add(game);
+        	Players.get(U.Handle).timer_done = false;
         	Players.get(U.Handle).ready = -1;
         	Players.get(U.Handle).letters.clear();			
 		}
+
 		//If ready = 0, that means they are already in a game
         else
         {
@@ -285,13 +322,25 @@ public class App extends WebSocketServer {
 					//If it isnt a valid word then clear out selected letters
 					Players.get(U.Handle).letters.clear();
 				}
+			}
+			
+			//Check if game is over
+			ArrayList<String> winners = new ArrayList<>();
+			winners = Players.get(U.Handle).game.GameOver(U.timer_done);
+			if (winners.size()!= 0 )
+			{
+				Summary summary = new Summary();
+				summary.Create_Summary(Players.get(U.Handle).game.ID,winners);
 				
-				//Check if game is over
-				/*if (Players.get(U.Handle).game.GameOver())
-				{
-					
-				}*/
-			}	
+				jsonString = gson.toJson(summary);
+				System.out.println("These are the winners: "+winners);
+				System.out.println("These are the ID: "+Players.get(U.Handle).game.ID);
+				System.out.println("This is the summary: "+summary.Summary_list);
+				broadcast(jsonString);		
+				summary.Clear_Summary();
+				Players.get(U.Handle).game.ID.clear();
+			}
+				
         }
         
         //Send change in state to everyone
