@@ -44,7 +44,6 @@ public class Leaderboard {
 		sortedScore.clear();
         sortedScore = sortScores(LB);
     }
-    }
     
     public void remove(String handle)
     {
