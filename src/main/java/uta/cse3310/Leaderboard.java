@@ -36,6 +36,8 @@ public class Leaderboard {
     	if (handle!= null)
     	{
     		LB.remove(handle);
+            sortedScore.clear();
+            sortedScore.addAll(LB.entrySet());
     	}
     }
 }
