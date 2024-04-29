@@ -55,12 +55,12 @@
     <br><br>
 
     <h2>Leaderboard</h2>
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Points</th>
-        </tr>
-    </table>
+	<table id="Leader_board1">
+		<tr>
+			<th>Username</th>
+			<th>Points</th>
+		</tr>
+	</table>
     
     <br>
     
@@ -92,7 +92,7 @@
 
     <div id="Leaderboard" style="width: 200px; order: 1;">
         <h2>Leaderboard</h2>
-		<table id="Leader_board">
+		<table id="Leader_board2">
 			<tr>
 				<th>Username</th>
 				<th>Points</th>
@@ -427,20 +427,27 @@
 			var sent_LB = JSON.parse(event.data);
 			console.log("I received leaderboard now i have to check it");
 			console.log(sent_LB);
-			var LeaderBoardTable = document.getElementById("Leader_board");
+			var LeaderBoardTable1 = document.getElementById("Leader_board1");
+			var LeaderBoardTable2 = document.getElementById("Leader_board2");
 
 			// Clear existing rows
-			LeaderBoardTable.innerHTML = "";
+			LeaderBoardTable1.innerHTML = "";
+			LeaderBoardTable2.innerHTML = "";
 		
 			for (var key in sent_LB.LB) 
 			{
 
-				var row = LeaderBoardTable.insertRow();
-				var cell1 = row.insertCell(0);
-				var cell2 = row.insertCell(1);
+				var row1 = LeaderBoardTable1.insertRow();
+				var row2 = LeaderBoardTable2.insertRow();
+				var cell11 = row1.insertCell(0);
+				var cell12 = row2.insertCell(0);
+				var cell21 = row1.insertCell(1);
+				var cell22 = row2.insertCell(1);
 				
-				cell1.textContent = key;
-				cell2.textContent = sent_LB.LB[key];
+				cell11.textContent = key;
+				cell12.textContent = key;
+				cell21.textContent = sent_LB.LB[key];
+				cell22.textContent = sent_LB.LB[key];
 				
     		}
 		}
