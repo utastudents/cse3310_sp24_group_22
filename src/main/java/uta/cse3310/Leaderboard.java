@@ -18,7 +18,7 @@ public class Leaderboard {
         LB.put(handle, score);
 		scores.add(score);
 		Collections.sort(scores);
-		if(scores.indexOf(score) >= names.size())
+		if(scores.indexOf(score) > names.size())
 		{
 			names.add(handle);
 		}
@@ -37,7 +37,7 @@ public class Leaderboard {
 		scores.remove(i);
 		scores.add(new_score);
 		Collections.sort(scores);
-		if(scores.indexOf(new_score) >= names.size())
+		if(scores.indexOf(new_score) > names.size())
 		{
 			names.add(handle);
 		}
