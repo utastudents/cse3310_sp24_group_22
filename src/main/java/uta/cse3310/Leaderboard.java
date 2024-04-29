@@ -6,7 +6,7 @@ import java.util.*;
 public class Leaderboard {
     public TreeMap<String, Integer> LB;
     public ArrayList<Integer> valueList = new ArrayList<Integer>(LB.values());
-    public ArrayList<String> keyList = new ArrayList<String>(LB.keyset());
+    public ArrayList<String> keyList = new ArrayList<String>(LB.keySet());
 
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
