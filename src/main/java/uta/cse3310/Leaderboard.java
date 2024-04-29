@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Leaderboard {
     public TreeMap<String, Integer> LB;
+    public SortedSet<Map.Entry<String, Integer>> sortedScore;
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
