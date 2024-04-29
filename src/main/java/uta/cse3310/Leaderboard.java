@@ -8,32 +8,26 @@ public class Leaderboard {
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
-        List<Map.Entry<String, Integer>> sortedScore = new ArrayList<>(LB.entrySet());    
-        Collections.sort(sortedScore, new Comparator<Map.Entry<String, Integer>>() {  
+        SortedSet<Map.Entry<String, Integer>> sortedScore = new TreeSet<>(new Comparator<Map.Entry<String, Integer>>() {  
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {  
                 return o1.getValue().compareTo(o2.getValue());  
             }  
         });  
-        // Create a new TreeMap using the sorted list  
-        TreeMap<String, Integer> sortedScore = new TreeMap<>();  
-
     }
 
     // Method to add a score to the leaderboard
     public void add(String handle, int score) {
         LB.put(handle, score);
-        for (Map.Entry<String, Integer> entry : list) {  
-            sortedScore.put(entry.getKey(), entry.getValue());  
-        }  
+        sortedScore.clear();
+        sortedScore.addAll(LB.entrySet());
     }
     
     public void update(String handle, int score)
     {
     	int new_score = score + LB.get(handle);
     	LB.put(handle, new_score);
-        for (Map.Entry<String, Integer> entry : list) {  
-            sortedScore.put(entry.getKey(), entry.getValue());  
-        }  
+        sortedScore.clear();
+        sortedScore.addAll(LB.entrySet());
     }
     
     public void remove(String handle)
