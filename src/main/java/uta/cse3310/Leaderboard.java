@@ -7,8 +7,11 @@ public class Leaderboard {
     public TreeMap<String, Integer> LB;
     public SortedSet<Map.Entry<String, Integer>> sortedScore = new TreeSet<>(new Comparator<Map.Entry<String, Integer>>() {  
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {  
-                int res = o1.getValue().compareTo(o2.getValue());
-                return res != 0 ? res : 1; 
+                if (o1.getKey().equals(o2.getKey())) {
+                    return res; // Code will now handle equality properly
+                } else {
+                    return res != 0 ? res : 1; // While still adding all entries
+                }
             }  
         }); 
     public Leaderboard() {
