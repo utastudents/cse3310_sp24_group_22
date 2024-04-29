@@ -435,7 +435,7 @@
 			LeaderBoardTable1.innerHTML = "";
 			LeaderBoardTable2.innerHTML = "";
 		
-			for (var key in sent_LB.sortedScore) 
+			for (var key in sent_LB.LB) 
 			{
 
 				var row1 = LeaderBoardTable1.insertRow();
@@ -447,8 +447,8 @@
 				
 				cell11.textContent = key;
 				cell12.textContent = key;
-				cell21.textContent = sent_LB.sortedScore[key].valueOf();
-				cell22.textContent = sent_LB.sortedScore[key];
+				cell21.textContent = sent_LB.LB[key];
+				cell22.textContent = sent_LB.LB[key];
 				
     		}
 		}
