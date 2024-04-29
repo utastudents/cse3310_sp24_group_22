@@ -19,7 +19,7 @@ public class Leaderboard {
                       else
                           return comp; 
                   } 
-        }
+        };
         Map<K, V> sortedScore = new TreeMap<K, V>(compareScore); 
 
     }
