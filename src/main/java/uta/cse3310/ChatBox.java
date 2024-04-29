@@ -1,17 +1,27 @@
 package uta.cse3310;
 
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
 public class ChatBox {
-    private Queue<Message> messages = new LinkedList<Message>();
+    private Stack<Message> messages = new Stack<Message>();
     
-    public Queue<Message> display_message(){
+    public Stack<Message> display_message(){
         return messages;
     }
 
     public void add(Message M) {
-        messages.offer(M);
+        if (validate_message(M.Message))
+            messages.push(M);
         return;
+    }
+
+    /**
+     * validates that messages sent use alphanumeric characters.
+     * @param msg
+     * @return
+     */
+    private boolean validate_message(String msg) {
+        return msg.matches("[A-Za-z0-9 ]*");
     }
 }

@@ -154,7 +154,8 @@ public class App extends WebSocketServer {
             Chat.add(M);
 
             // TBH we can just send the message back to everyone
-            broadcast(gson.toJson(M));
+            if (Chat.display_message().peek() == M)
+                broadcast(gson.toJson(M));
             return;
         }
         
