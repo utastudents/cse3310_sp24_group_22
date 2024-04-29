@@ -40,7 +40,7 @@ public class Leaderboard {
     public void update(String handle, int score)
     {
     	int new_score = score + LB.get(handle);
-        LB.put(handle, new_score)
+        LB.put(handle, new_score);
 		sortedScore.clear();
         sortedScore = sortScores(LB);
     }
