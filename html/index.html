@@ -146,6 +146,7 @@
 		constructor()
 		{
 			this.LB = null;
+			this.sortedScore = null;
 		}
 	}
 
@@ -434,7 +435,7 @@
 			LeaderBoardTable1.innerHTML = "";
 			LeaderBoardTable2.innerHTML = "";
 		
-			for (var key in sent_LB.LB) 
+			for (var key in sent_LB.sortedScore) 
 			{
 
 				var row1 = LeaderBoardTable1.insertRow();
@@ -446,8 +447,8 @@
 				
 				cell11.textContent = key;
 				cell12.textContent = key;
-				cell21.textContent = sent_LB.LB[key];
-				cell22.textContent = sent_LB.LB[key];
+				cell21.textContent = sent_LB.sortedScore[key];
+				cell22.textContent = sent_LB.sortedScore[key];
 				
     		}
 		}
