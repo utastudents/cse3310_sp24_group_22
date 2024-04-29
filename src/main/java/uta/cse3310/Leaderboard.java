@@ -5,39 +5,45 @@ import java.util.*;
 
 public class Leaderboard {
     public TreeMap<String, Integer> LB;
-	public SortedSet sortedScore;
-
-	static <K,V> extends Comparable<? super V>SortedSet<Map.Entry<K,V>> sortingScore(Map<K,V> map) {
-        SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<Map.Entry<K,V>>(
-            new Comparator<Map.Entry<K,V>>() {
-                @Override public int compare(Map.Entry<K,V> e1, Map.Entry<K,V> e2) {
-                    int res = e1.getValue().compareTo(e2.getValue());
-                    return res != 0 ? res : 1; // Special fix to preserve items with equal values
-                }
-            }
-        );
-        sortedEntries.addAll(map.entrySet());
-        return sortedEntries;
-    }
-
+	public List<Integer> scores;
+	public List<String> names;
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
-		sortedScore = new SortedSet();
+		score = new Arraylist<Integer>();
+		names = new Arraylist<String>();
     }
     // Method to add a score to the leaderboard
     public void add(String handle, int score) {
         LB.put(handle, score);
-		sortedScore.clear();
-        sortedScore = sortingScore(LB);
+		scores.add(score);
+		Collections.sort(scores);
+		if(scores.indexOf(score) > names.length())
+		{
+			names.add(handle);
+		}
+		else
+		{
+			names.add(scores.indexOf(score), handle);
+		}
     }
     
     public void update(String handle, int score)
     {
     	int new_score = score + LB.get(handle);
         LB.put(handle, new_score);
-		sortedScore.clear();
-        sortedScore = sortingScores(LB);
+		scores.remove(score);
+		names.remove(handle);
+		scores.add(new_score)
+		Collections.sort(scores);
+		if(scores.indexOf(new_score) > names.length())
+		{
+			names.add(handle);
+		}
+		else
+		{
+			names.add(scores.indexOf(new_score), handle);
+		}
     }
     
     public void remove(String handle)
@@ -45,9 +51,10 @@ public class Leaderboard {
     	if (handle!= null)
     	{
             LB.remove(handle);
-			sortedScore.clear();
-        	sortedScore = sortingScores(LB);
     	}
+		int i = names.indexOf(handle);
+		names.remove(i);
+		scores.remove(i);
     }
 }
 
