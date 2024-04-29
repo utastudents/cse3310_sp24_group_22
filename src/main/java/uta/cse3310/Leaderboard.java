@@ -1,41 +1,40 @@
 package uta.cse3310;
 import java.util.Comparator;
 import java.util.TreeMap;
-import java.util.Comparator;
 import java.util.*;
 
 public class Leaderboard {
     public TreeMap<String, Integer> LB;
-    public Map sortedScore;
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
-        Comparator<String> compareScore =new Comparator<String> (){
-            public int compare(String k1, String k2) 
-                  { 
-                      int comp = map.get(k1).compareTo( 
-                          map.get(k2)); 
-                      if (comp == 0) 
-                          return 1; 
-                      else
-                          return comp; 
-                  } 
-        };
-        Map<K, V> sortedScore = new TreeMap<K, V>(compareScore); 
+    List<Map.Entry<String, Integer>> list = new ArrayList<>(treeMap.entrySet());  
+        // Sort the list by values using a custom comparator  
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {  
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {  
+                return o1.getValue().compareTo(o2.getValue());  
+            }  
+        });  
+        // Create a new TreeMap using the sorted list  
+        TreeMap<String, Integer> sortedScore = new TreeMap<>();  
 
     }
 
     // Method to add a score to the leaderboard
     public void add(String handle, int score) {
         LB.put(handle, score);
-        sortedScore.putAll(map);
+        for (Map.Entry<String, Integer> entry : list) {  
+            sortedScore.put(entry.getKey(), entry.getValue());  
+        }  
     }
     
     public void update(String handle, int score)
     {
     	int new_score = score + LB.get(handle);
     	LB.put(handle, new_score);
-        sortedScore.putAll(map);
+        for (Map.Entry<String, Integer> entry : list) {  
+            sortedScore.put(entry.getKey(), entry.getValue());  
+        }  
     }
     
     public void remove(String handle)
