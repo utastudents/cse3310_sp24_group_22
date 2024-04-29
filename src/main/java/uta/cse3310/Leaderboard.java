@@ -7,7 +7,7 @@ public class Leaderboard {
     public TreeMap<String, Integer> LB;
     public SortedSet<Map.Entry<String, Integer>> sortedScore = new TreeSet<>(new Comparator<Map.Entry<String, Integer>>() {  
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {  
-                int res = e1.getValue().compareTo(e2.getValue());
+                int res = o1.getValue().compareTo(o2.getValue());
                 return res != 0 ? res : 1; 
             }  
         }); 
