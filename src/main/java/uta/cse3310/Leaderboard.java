@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Leaderboard {
     public TreeMap<String, Integer> LB;
-    public SortedSet<Map.Entry<String, Integer>> sortedScore = new TreeSet<>(new Comparator<Map.Entry<String, Integer>>() {  
+    public TreeMap<Map.Entry<String, Integer>> sortedScore = new TreeMap<>(new Comparator<Map.Entry<String, Integer>>() {  
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
                 int res = o1.getValue().compareTo(o2.getValue());  
                 if (o1.getKey().equals(o2.getKey())) {
@@ -24,7 +24,7 @@ public class Leaderboard {
     public void add(String handle, int score) {
         LB.put(handle, score);
         sortedScore.clear();
-        sortedScore.addAll(LB.entrySet());
+        sortedScore.putAll(LB.entrySet());
         for (Map.Entry<String, Integer> entry : sortedScore) {  
             System.out.println(entry.getKey() + ": " + entry.getValue());  
         }  
@@ -35,7 +35,7 @@ public class Leaderboard {
     	int new_score = score + LB.get(handle);
     	LB.put(handle, new_score);
         sortedScore.clear();
-        sortedScore.addAll(LB.entrySet());
+        sortedScore.putAll(LB.entrySet());
         for (Map.Entry<String, Integer> entry : sortedScore) {  
             System.out.println(entry.getKey() + ": " + entry.getValue());  
         }  
@@ -47,7 +47,7 @@ public class Leaderboard {
     	{
     		LB.remove(handle);
             sortedScore.clear();
-            sortedScore.addAll(LB.entrySet());
+            sortedScore.putAll(LB.entrySet());
             for (Map.Entry<String, Integer> entry : sortedScore) {  
                 System.out.println(entry.getKey() + ": " + entry.getValue());  
             }
