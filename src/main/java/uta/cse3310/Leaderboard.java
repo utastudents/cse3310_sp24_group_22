@@ -15,6 +15,12 @@ public class Leaderboard {
         LB.put(handle, score);
     }
     
+    public void update(String handle, int score)
+    {
+    	int new_score = score + LB.get(handle);
+    	LB.put(handle, new_score);
+    }
+    
     public void remove(String handle)
     {
     	if (handle!= null)

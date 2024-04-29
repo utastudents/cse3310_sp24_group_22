@@ -32,11 +32,12 @@ public class GameTest {
     @Test
     public void testIsValidWord() {
         Game game = new Game(1, 1);
+        Leaderboard lb = new Leaderboard();
         ArrayList<Coordinate> indexLetters = new ArrayList<>();
         // Add some coordinates to the list
         indexLetters.add(new Coordinate(1, 2));
         indexLetters.add(new Coordinate(1, 3));
-        assertTrue(game.isValidWord(indexLetters,"Test"));
+        assertTrue(game.isValidWord(indexLetters,"Test",lb));
     }
 
     @Test

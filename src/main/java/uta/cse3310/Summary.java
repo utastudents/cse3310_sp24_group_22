@@ -43,6 +43,8 @@ public class Summary {
 		
     }
     
+    
+    
     void Clear_Summary()
     {
     	Summary_list.clear();

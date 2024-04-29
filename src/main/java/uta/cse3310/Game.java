@@ -62,7 +62,7 @@ public class Game
         return grid;
     }
     
-    boolean isValidWord(ArrayList<Coordinate> indexLetters, String Userid)
+    boolean isValidWord(ArrayList<Coordinate> indexLetters, String Userid, Leaderboard LB)
     {
     	String word = "";
     	char letter;
@@ -89,6 +89,7 @@ public class Game
 		{
 			//Add the word and the index of the id in the beginning of the word
 			identified_words.add(ID.indexOf(Userid)+word);
+			LB.update(Userid,10);
 			return true;
 		}
 		
@@ -194,7 +195,7 @@ public class Game
         return selectedLetters;
     }
     
-	ArrayList<String> GameOver(boolean timer_done) 
+	ArrayList<String> GameOver(boolean timer_done, Leaderboard LB) 
 	{
 		ArrayList<Integer> scores = new ArrayList<>();
 		ArrayList<String> names_winners = new ArrayList<>();
@@ -220,9 +221,12 @@ public class Game
 		    
 		    for (int i = 0; i < scores.size(); i++) 
 		    {
+		    	//LB.update(ID.get(i),10*scores.get(i));
 		        if (scores.get(i) == max_count) 
 		        {
 		            names_winners.add(ID.get(i));
+		            LB.update(ID.get(i),50);
+		            
 		        }
 		    }
 		}

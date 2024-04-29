@@ -309,13 +309,13 @@ public class App extends WebSocketServer {
 				System.out.println(letters);
 				
 				//Check if it is a valid word
-				if (Players.get(U.Handle).game.isValidWord(letters,U.Handle))
+				if (Players.get(U.Handle).game.isValidWord(letters,U.Handle,leaderboard))
 				{	
 					//Update the letters to be selected							
 					Players.get(U.Handle).letters = letters;
 					
 					//update leaderboard
-					leaderboard.add(U.Handle,0);				
+					//leaderboard.add(U.Handle,0);				
 				}
 				else
 				{		
@@ -326,7 +326,7 @@ public class App extends WebSocketServer {
 			
 			//Check if game is over
 			ArrayList<String> winners = new ArrayList<>();
-			winners = Players.get(U.Handle).game.GameOver(U.timer_done);
+			winners = Players.get(U.Handle).game.GameOver(U.timer_done,leaderboard);
 			if (winners.size()!= 0 )
 			{
 				Summary summary = new Summary();
