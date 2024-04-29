@@ -8,7 +8,7 @@ public class Leaderboard {
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
-    List<Map.Entry<String, Integer>> list = new ArrayList<>(treeMap.entrySet());  
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(LB.entrySet());  
         // Sort the list by values using a custom comparator  
         Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {  
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {  
@@ -16,7 +16,7 @@ public class Leaderboard {
             }  
         });  
         // Create a new TreeMap using the sorted list  
-        TreeMap<String, Integer> sortedScore = new TreeMap<>();  
+        Tre<String, Integer> sortedScore = new TreeMap<>();  
 
     }
 
