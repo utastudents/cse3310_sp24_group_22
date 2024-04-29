@@ -10,8 +10,8 @@ public class Leaderboard {
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
-        Comparator<K> compareScore =new Comparator<K> (){
-            public int compare(K k1, K k2) 
+        Comparator<String> compareScore =new Comparator<String> (){
+            public int compare(String k1, String k2) 
                   { 
                       int comp = map.get(k1).compareTo( 
                           map.get(k2)); 
@@ -21,7 +21,7 @@ public class Leaderboard {
                           return comp; 
                   } 
         };
-        Map<K, V> sortedScore = new TreeMap<K, V>(compareScore); 
+        Map<String, Integer> sortedScore = new TreeMap<String, Integer>(compareScore); 
 
     }
 
