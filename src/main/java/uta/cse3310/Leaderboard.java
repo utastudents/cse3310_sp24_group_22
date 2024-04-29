@@ -20,6 +20,9 @@ public class Leaderboard {
         LB.put(handle, score);
         sortedScore.clear();
         sortedScore.addAll(LB.entrySet());
+        for (Map.Entry<String, Integer> entry : sortedSet) {  
+            System.out.println(entry.getKey() + ": " + entry.getValue());  
+        }  
     }
     
     public void update(String handle, int score)
@@ -28,6 +31,9 @@ public class Leaderboard {
     	LB.put(handle, new_score);
         sortedScore.clear();
         sortedScore.addAll(LB.entrySet());
+        for (Map.Entry<String, Integer> entry : sortedSet) {  
+            System.out.println(entry.getKey() + ": " + entry.getValue());  
+        }  
     }
     
     public void remove(String handle)
@@ -37,6 +43,9 @@ public class Leaderboard {
     		LB.remove(handle);
             sortedScore.clear();
             sortedScore.addAll(LB.entrySet());
+            for (Map.Entry<String, Integer> entry : sortedSet) {  
+                System.out.println(entry.getKey() + ": " + entry.getValue());  
+            }
     	}
     }
 }
