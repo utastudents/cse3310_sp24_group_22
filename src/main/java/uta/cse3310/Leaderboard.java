@@ -52,10 +52,11 @@ public class Leaderboard {
     	if (handle!= null)
     	{
             LB.remove(handle);
+			int i = names.indexOf(handle);
+			names.remove(i);
+			scores.remove(i);
     	}
-		int i = names.indexOf(handle);
-		names.remove(i);
-		scores.remove(i);
+
     }
 }
 
