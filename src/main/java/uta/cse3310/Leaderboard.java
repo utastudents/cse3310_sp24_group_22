@@ -8,9 +8,8 @@ public class Leaderboard {
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
-        List<Map.Entry<String, Integer>> list = new ArrayList<>(LB.entrySet());  
-        // Sort the list by values using a custom comparator  
-        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {  
+        List<Map.Entry<String, Integer>> sortedScore = new ArrayList<>(LB.entrySet());    
+        Collections.sort(sortedScore, new Comparator<Map.Entry<String, Integer>>() {  
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {  
                 return o1.getValue().compareTo(o2.getValue());  
             }  
