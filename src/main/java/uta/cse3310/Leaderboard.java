@@ -10,7 +10,7 @@ public class Leaderboard {
     public Leaderboard() {
         // Initialize the TreeMap with a custom comparator to sort by score in descending order
         LB = new TreeMap<>();
-		score = new Arraylist<Integer>();
+		scores = new Arraylist<Integer>();
 		names = new Arraylist<String>();
     }
     // Method to add a score to the leaderboard
