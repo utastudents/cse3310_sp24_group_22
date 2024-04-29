@@ -5,15 +5,14 @@ import java.util.*;
 
 public class Leaderboard {
     public TreeMap<String, Integer> LB;
-    public SortedSet<Map.Entry<String, Integer>> sortedScore;
-    public Leaderboard() {
-        // Initialize the TreeMap with a custom comparator to sort by score in descending order
-        LB = new TreeMap<>();
-        SortedSet<Map.Entry<String, Integer>> sortedScore = new TreeSet<>(new Comparator<Map.Entry<String, Integer>>() {  
+    public SortedSet<Map.Entry<String, Integer>> sortedScore = new TreeSet<>(new Comparator<Map.Entry<String, Integer>>() {  
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {  
                 return o1.getValue().compareTo(o2.getValue());  
             }  
-        });  
+        }); 
+    public Leaderboard() {
+        // Initialize the TreeMap with a custom comparator to sort by score in descending order
+        LB = new TreeMap<>();
     }
 
     // Method to add a score to the leaderboard
