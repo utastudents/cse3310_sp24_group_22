@@ -435,7 +435,7 @@
 			LeaderBoardTable1.innerHTML = "";
 			LeaderBoardTable2.innerHTML = "";
 		
-			for (var key in sent_LB.LB) 
+			/*for (var key in sent_LB.LB) 
 			{
 
 				var row1 = LeaderBoardTable1.insertRow();
@@ -449,6 +449,22 @@
 				cell12.textContent = key;
 				cell21.textContent = sent_LB.LB[key];
 				cell22.textContent = sent_LB.LB[key];
+				
+    		}*/
+			for (var key in sent_LB.names) 
+			{
+
+				var row1 = LeaderBoardTable1.insertRow();
+				var row2 = LeaderBoardTable2.insertRow();
+				var cell11 = row1.insertCell(0);
+				var cell12 = row2.insertCell(0);
+				var cell21 = row1.insertCell(1);
+				var cell22 = row2.insertCell(1);
+				
+				cell11.textContent = sent_LB.names[key];
+				cell12.textContent = sent_LB.names[key];
+				cell21.textContent = sent_LB.scores[key];
+				cell22.textContent = sent_LB.scores[key];
 				
     		}
 		}
