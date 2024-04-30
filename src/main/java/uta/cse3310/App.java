@@ -426,12 +426,21 @@ public class App extends WebSocketServer {
     port = 9122;
     String WSPort = System.getenv("WEBSOCKET_PORT");
     String t_grid = System.getenv("TEST_GRID");
-    TEST_GRID = Integer.valueOf(t_grid);
+
+    
+    if (t_grid == null)
+    {
+    	TEST_GRID = 20;
+    }
+    else
+    {
+    	TEST_GRID = Integer.valueOf(t_grid);
+    }
     if (WSPort!=null)
     {
       port = Integer.valueOf(WSPort);
     }
-
+	
     App A = new App(port);
     A.setReuseAddr(true);
     A.start();
