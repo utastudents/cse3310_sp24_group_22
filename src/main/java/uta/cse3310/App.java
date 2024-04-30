@@ -59,6 +59,7 @@ public class App extends WebSocketServer {
     private ArrayList<String> Selected_Game;
     private int GId = 1;
     public String jsonString = "";
+    public static int TEST_GRID;
     
     //Game variables
    
@@ -101,11 +102,11 @@ public class App extends WebSocketServer {
         
         //Initialize available games
         Games = new ArrayList<>();
-        Game game1 = new Game(0,0);
-        Game game2 = new Game(0,0);
-        Game game3 = new Game(0,0);
-        Game game4 = new Game(0,0);
-        Game game5 = new Game(0,0);
+        Game game1 = new Game(0,TEST_GRID);
+        Game game2 = new Game(0,TEST_GRID);
+        Game game3 = new Game(0,TEST_GRID);
+        Game game4 = new Game(0,TEST_GRID);
+        Game game5 = new Game(0,TEST_GRID);
         
         Games.add(game1);
         Games.add(game2);
@@ -123,6 +124,8 @@ public class App extends WebSocketServer {
 		Gson gson = new Gson();
 		//Send out the server id to each user
 		conn.send(gson.toJson(ser));
+		conn.send(gson.toJson(TEST_GRID));
+		
 		System.out.println(gson.toJson(ser));
 		ser+=1;
 		
@@ -180,9 +183,20 @@ public class App extends WebSocketServer {
         }
         
         UserEvent U = gson.fromJson(message, UserEvent.class);
-        
-        //Just entered the game
-        if (U.ready == -1)
+        if (U.ready == -2)
+        {
+        	if (!Players.containsKey(U.Handle) || U.Handle.length() > 10)
+        	{
+        		conn.send(gson.toJson("approved"));
+        	}
+        	else
+        	{
+        		conn.send(gson.toJson("disapproved"));
+        	}
+        	return;
+        }
+        //username approved
+        else if (U.ready == -1)
         {
         	System.out.println("This is the player: " + U.Uid);
         	//Assign the color
@@ -259,8 +273,8 @@ public class App extends WebSocketServer {
         		if (g != null)
         		{
         			g.busy = 1;
-        			g.GameId = GId;
-        			GId++;
+        			g.test_grid = TEST_GRID;
+
         			
         			//Remove the players from wait list if there is a game
 					for (int i = 0; i < U.GameType; i++)
@@ -288,7 +302,7 @@ public class App extends WebSocketServer {
 		//moving back to lobby
 		else if (U.ready == 2)
 		{
-        	Game game = new Game(0,0);
+        	Game game = new Game(0,TEST_GRID);
         	Games.remove(Players.get(U.Handle).game);
         	Players.get(U.Handle).game = null;
         	Games.add(game);
@@ -411,6 +425,8 @@ public class App extends WebSocketServer {
 
     port = 9122;
     String WSPort = System.getenv("WEBSOCKET_PORT");
+    String t_grid = System.getenv("TEST_GRID");
+    TEST_GRID = Integer.valueOf(t_grid);
     if (WSPort!=null)
     {
       port = Integer.valueOf(WSPort);

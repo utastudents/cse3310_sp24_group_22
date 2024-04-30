@@ -34,6 +34,18 @@ public class LeaderboardTest {
         assertEquals(1, lb.LB.size());
         assertNull(lb.LB.get("John"));
     }
+    
+    @Test
+    public void testUpdate() {
+        Leaderboard lb = new Leaderboard();
+        lb.add("John", 100);
+        lb.add("Jane", 50);
+        lb.add("Bob", 200);
+
+        lb.update("Jane",60);
+        assertEquals(110,(int) lb.LB.get("Jane"));
+
+    }    
 
     @Test
     public void testRemoveNullHandle() {

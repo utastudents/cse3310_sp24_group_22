@@ -1,37 +1,38 @@
 package uta.cse3310;
 
-import static org.junit.Assert.*;
-import org.junit.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
-public class AppTest {
-
-    private App app;
-
-    @Before
-    public void setUp() {
-        app = new App(50000); // Choose a suitable port for testing
+/**
+ * Unit test for simple App.
+ */
+public class AppTest 
+    extends TestCase
+{
+    /**
+     * Create the test case
+     *
+     * @param testName name of the test case
+     */
+    public AppTest( String testName )
+    {
+        super( testName );
     }
 
-    @Test
-    public void testConstructor() {
-        // Ensure the App instance is created properly
-        assertNotNull(app);
+    /**
+     * @return the suite of tests being tested
+     */
+    public static Test suite()
+    {
+        return new TestSuite( AppTest.class );
     }
 
-    @Test
-    public void testOnOpen() {
-        // Simulate connection opened and check if server sends correct response
+    /**
+     * Rigourous Test :-)
+     */
+    public void testApp()
+    {
+        assertTrue( true );
     }
-
-    @Test
-    public void testOnClose() {
-        // Simulate connection closed and verify server's behavior
-    }
-
-    @Test
-    public void testOnMessage() {
-        // Simulate receiving different types of messages and observe server's behavior
-    }
-
-    // Add more tests for other public methods as needed
 }

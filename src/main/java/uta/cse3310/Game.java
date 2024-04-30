@@ -5,7 +5,7 @@ import java.util.Random;
 public class Game 
 {
 	public int busy;
-	public int GameId;
+	public int test_grid;
 	public ArrayList<String> ID;
 	public char[][] grid = new char[20][20];
 	//public char[] word;
@@ -13,10 +13,10 @@ public class Game
 	public ArrayList<String> valid_words;
 	
 
-    Game(int busy, int GameId) 
+    Game(int busy, int test_grid) 
     {
     	this.busy = busy;
-    	this.GameId = GameId;
+    	this.test_grid = test_grid;
 		ID = new ArrayList<>();
 		valid_words = new ArrayList<>();
 		
@@ -28,17 +28,17 @@ public class Game
 	char[][] createGrid() 
 	{
 		Random rand = new Random();
-		Create_Grid create_grid = new Create_Grid(20,20,0.67);
-        char[][] grid = new char[20][20];
+		Create_Grid create_grid = new Create_Grid(test_grid,test_grid,0.67);
+        char[][] grid = new char[test_grid][test_grid];
         if (create_grid.initializeBoard("files.txt"))
         {
         	grid = create_grid.boardArray;
         	valid_words = create_grid.selected_words;
         }
 		
-		for (int i = 0; i < 20; i++) 
+		for (int i = 0; i < test_grid; i++) 
 		{
-	        for (int j = 0; j < 20; j++) 
+	        for (int j = 0; j < test_grid; j++) 
 	        {
 	            if (grid[i][j] == '#')
 	            {

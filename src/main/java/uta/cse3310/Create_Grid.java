@@ -8,9 +8,9 @@ import java.util.Random;
 
 public class Create_Grid {
     public char[][] boardArray;
-    private int boardLength;
-    private int boardWidth;
-    private double density;
+    public int boardLength;
+    public int boardWidth;
+    public double density;
     public ArrayList<String> validWords;
     public ArrayList<String> selected_words;
 
@@ -46,28 +46,30 @@ public class Create_Grid {
         return true;
     }
 
-    public boolean populateBoardWithWords() {
-        Random random = new Random();
-        int wordsPlaced = 0;
-        double totalCells = boardLength * boardWidth;
-        double currentDensity = 0;
+	public boolean populateBoardWithWords() {
+		Random random = new Random();
+		int wordsPlaced = 0;
+		double totalCells = boardLength * boardWidth;
+		double currentDensity = 0;
 
-        while (currentDensity < density && !validWords.isEmpty()) {
-            String word = validWords.remove(random.nextInt(validWords.size()));
-            int startX = random.nextInt(boardLength);
-            int startY = random.nextInt(boardWidth);
-            int orientation = random.nextInt(5); // 0: horizontal, 1: vertical up, 2: vertical down, 3: diagonal down, 4: diagonal up
+		while (currentDensity < density && !validWords.isEmpty()) {
+		    int orientation = random.nextInt(5); // 0: horizontal, 1: vertical up, 2: vertical down, 3: diagonal down, 4: diagonal up
 
-            // Place word based on orientation
-            boolean placed = placeWord(word, startX, startY, orientation);
-            if (placed) {
-                wordsPlaced++;
-                currentDensity = (double) (wordsPlaced * word.length()) / totalCells;
-                selected_words.add(word);
-            }
-        }return true;
-        
-    }
+		    String word = validWords.remove(random.nextInt(validWords.size()));
+		    int startX = random.nextInt(boardLength);
+		    int startY = random.nextInt(boardWidth);
+
+		    // Place word based on orientation
+		    boolean placed = placeWord(word, startX, startY, orientation);
+		    if (placed) {
+		        wordsPlaced++;
+		        currentDensity = (double) (wordsPlaced * word.length()) / totalCells;
+		        selected_words.add(word);
+		    }
+		}
+		return true;
+	}
+
 
     public boolean placeWord(String word, int startX, int startY, int orientation) {
         int wordLength = word.length();
