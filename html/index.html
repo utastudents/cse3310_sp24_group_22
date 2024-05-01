@@ -593,7 +593,7 @@
         username = document.getElementById("username").value;
 		var usernameVar = username;
 		console.log("This is the username length");
-		console.log(usernameVar.length());
+		console.log(username.length);
         if (username.trim() !== "")
         {
         
@@ -640,7 +640,7 @@
 				    
 				
 		    }
-			else if(usernameVar.length() > 10)
+			else if(username.length > 10)
 			{
 				alert("Username is too long. Names have to be 10 or less characters");
 				sent_status = 0;
