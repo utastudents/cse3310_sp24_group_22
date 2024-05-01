@@ -1,10 +1,22 @@
 package uta.cse3310;
 
 import org.junit.Test;
+
+import uta.cse3310.Coordinate;
+import uta.cse3310.Create_Grid;
+import uta.cse3310.Game;
+import uta.cse3310.GameClient;
+import uta.cse3310.Leaderboard;
+
+import java.util.HashMap;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Map;
+import java.util.Arrays;
 
 public class GameTest {
+    private int MAX_CREATE_TIME = 1_000_000_000; // 1 second in nanoseconds
 
     @Test
     public void testConstructor() {
@@ -122,6 +134,46 @@ public class GameTest {
         // Test GameOver
         ArrayList<String> names_winners = game.GameOver(false, lb);
         assertEquals(0, names_winners.size());
+    }
+
+    @Test
+    public void testGridCreatedInTime() {
+        Game game = new Game(1, 20);
+        game.test_grid = 20;
+
+
+        long startTime = System.nanoTime();
+        char[][] grid = game.createGrid();
+        long endTime = System.nanoTime();
+
+        long duration = (endTime - startTime);
+        assertTrue(duration < MAX_CREATE_TIME);
+    }
+
+    @Test
+    public void testGridUsesWholeAlphabetBeforeReusing() {
+        int max_value = 0;
+        int min_value = 0;
+
+        // Initialize and get Hash of char count
+        GameClient game = new GameClient(1, 20);
+        game.test_grid = 20;
+        char[][] grid = game.createGrid();
+        Map<Character, Integer> letters = game.create_grid(game.grid);
+
+        for(Integer s : letters.values()) {
+            if (s < min_value) {
+                min_value = s;
+            }
+            else if (s > max_value) {
+                max_value = s;
+            }
+        }
+        int difference = max_value - min_value;
+        // uncomment to see counts of each letter
+        // System.out.println(letters.entrySet());
+        assertTrue(difference == 1 || difference == 0);
+
     }
 }
 
