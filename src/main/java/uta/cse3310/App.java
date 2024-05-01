@@ -39,6 +39,7 @@ public class App extends WebSocketServer {
     private ArrayList<String> Wait_game_2;
     private ArrayList<String> Wait_game_3;
     private ArrayList<String> Wait_game_4;
+
     
     //Chat
     private ChatBox Chat;
@@ -60,6 +61,7 @@ public class App extends WebSocketServer {
     private int GId = 1;
     public String jsonString = "";
     public static int TEST_GRID;
+    public static String VERSION;
     
     //Game variables
    
@@ -125,6 +127,7 @@ public class App extends WebSocketServer {
 		//Send out the server id to each user
 		conn.send(gson.toJson(ser));
 		conn.send(gson.toJson(TEST_GRID));
+		conn.send(gson.toJson(VERSION));
 		
 		System.out.println(gson.toJson(ser));
 		ser+=1;
@@ -138,25 +141,27 @@ public class App extends WebSocketServer {
         System.out.println(user);
         leaderboard.remove(user);
 		//Update wait list
-    	if (Players.get(user).GameType == 2)
-    	{
-    		Wait_game_2.remove(user);
-    		Selected_Game = Wait_game_2;
-    		
-    	}
-    	else if (Players.get(user).GameType == 3)
-    	{
-    		Wait_game_2.remove(user);
-    		Selected_Game = Wait_game_3;
-    	}
-    	else
-    	{
-    		Wait_game_2.remove(user);
-    		Selected_Game = Wait_game_4;
-    	}
+		if (!Players.isEmpty())
+		{
+			if (Players.get(user).GameType == 2)
+			{
+				Wait_game_2.remove(user);
+				Selected_Game = Wait_game_2;
+				
+			}
+			else if (Players.get(user).GameType == 3)
+			{
+				Wait_game_3.remove(user);
+				Selected_Game = Wait_game_3;
+			}
+			else
+			{
+				Wait_game_4.remove(user);
+				Selected_Game = Wait_game_4;
+			}
 
-        Players.remove(user);
-
+		    Players.remove(user);
+		}
 
 		Gson gson = new GsonBuilder().create();
 		String jsonString = gson.toJson(leaderboard);
@@ -185,7 +190,7 @@ public class App extends WebSocketServer {
         UserEvent U = gson.fromJson(message, UserEvent.class);
         if (U.ready == -2)
         {
-        	if (!Players.containsKey(U.Handle) || U.Handle.length() > 10)
+        	if (!Players.containsKey(U.Handle) && U.Handle.length() <= 10)
         	{
         		conn.send(gson.toJson("approved"));
         	}
@@ -217,12 +222,12 @@ public class App extends WebSocketServer {
 			}
 			else if (Players.get(U.Handle).GameType == 3)
 			{
-				Wait_game_2.remove(U.Handle);
+				Wait_game_3.remove(U.Handle);
 				Selected_Game = Wait_game_3;
 			}
 			else
 			{
-				Wait_game_2.remove(U.Handle);
+				Wait_game_4.remove(U.Handle);
 				Selected_Game = Wait_game_4;
 			}
 
@@ -426,8 +431,8 @@ public class App extends WebSocketServer {
     port = 9122;
     String WSPort = System.getenv("WEBSOCKET_PORT");
     String t_grid = System.getenv("TEST_GRID");
-
-    
+	String version = System.getenv("VERSION");
+    VERSION = version;
     if (t_grid == null)
     {
     	TEST_GRID = 20;
