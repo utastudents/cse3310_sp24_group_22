@@ -494,7 +494,11 @@
 			button1.id = "OKAY";
 			button1.addEventListener('click', okay);
 			summaryDiv.appendChild(button1);
-						
+			
+			button1.style.display = "block";
+			button1.style.marginTop = "20px";
+			button1.style.fontSize = "20px";			
+									
 			summaryDiv.style.display = "block";
 			summaryDiv.style.position = "absolute";
 			summaryDiv.style.zIndex = "999";
@@ -523,22 +527,7 @@
 			LeaderBoardTable1.innerHTML = "";
 			LeaderBoardTable2.innerHTML = "";
 		
-			/*for (var key in sent_LB.LB) 
-			{
 
-				var row1 = LeaderBoardTable1.insertRow();
-				var row2 = LeaderBoardTable2.insertRow();
-				var cell11 = row1.insertCell(0);
-				var cell12 = row2.insertCell(0);
-				var cell21 = row1.insertCell(1);
-				var cell22 = row2.insertCell(1);
-				
-				cell11.textContent = key;
-				cell12.textContent = key;
-				cell21.textContent = sent_LB.LB[key];
-				cell22.textContent = sent_LB.LB[key];
-				
-    		}*/
 			for (var key in sent_LB.names) 
 			{
 
@@ -599,7 +588,7 @@
         username = document.getElementById("username").value;
         if (username.trim() !== "")
         {
-        
+        	
         
 		    if (sent_status === 0)
 		    {
@@ -652,7 +641,7 @@
         
         else 
         {
-            alert("Please enter a username before joining.");
+            alert("Please enter a username which is max 10 characters long before joining.");
         }
         
     }
