@@ -594,11 +594,7 @@
 		var usernameVar = username;
 		console.log("This is the username length");
 		console.log(username.length);
-		if(username.length > 10)
-		{
-			alert("Username is too long. Names have to be 10 or less characters");
-			sent_status = 0;
-		}
+
         if (username.trim() !== "")
         {
         
@@ -611,6 +607,11 @@
 	    
 		    	connection.send(JSON.stringify(U));
 		    }
+			else if(username.length > 10)
+			{
+				alert("Username is too long. Names have to be 10 or less characters");
+				sent_status = 0;
+			}
 		    else if (sent_status === 1)
 		    {
 		    
