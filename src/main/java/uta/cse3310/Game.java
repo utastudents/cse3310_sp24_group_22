@@ -78,6 +78,13 @@ public class Game
     	//If it is valid return true
 		if (valid_words.contains(word))
 		{
+			for (int i = 0; i < ID.size(); i++)
+			{
+				if (identified_words.contains(i+word))
+				{
+					return false;
+				}
+			}
 			//Add the word and the index of the id in the beginning of the word
 			identified_words.add(ID.indexOf(Userid)+word);
 			LB.update(Userid,10);
