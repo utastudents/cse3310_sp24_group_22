@@ -151,7 +151,7 @@ public class GameTest {
     }
 
     @Test
-    public void testGridUsesWholeAlphabetBeforeReusing() {
+    public void testReusingFillerChars() {
         int max_value = 0;
         int min_value = 0;
 
