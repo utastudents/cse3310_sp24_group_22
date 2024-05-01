@@ -155,25 +155,51 @@ public class GameTest {
         int max_value = 0;
         int min_value = 0;
 
-        // Initialize and get Hash of char count
+        // Use GameClient's version of create_grid 
+        // to get a hashmap with <K: char, V: it's count>
         GameClient game = new GameClient(1, 20);
         game.test_grid = 20;
         char[][] grid = game.createGrid();
         Map<Character, Integer> letters = game.create_grid(game.grid);
 
+        // iterate over keys to find the 
+        // most used letters and the least
+        // used letters
         for(Integer s : letters.values()) {
             if (s < min_value) {
                 min_value = s;
             }
-            else if (s > max_value) {
+            
+            if (s > max_value) {
                 max_value = s;
             }
         }
         int difference = max_value - min_value;
         // uncomment to see counts of each letter
         // System.out.println(letters.entrySet());
+
+        // difference == 0: each letter was used the exact same amount of times
+        // difference == 1: a letter has been reused
         assertTrue(difference == 1 || difference == 0);
 
     }
-}
 
+    @Test
+    public void testDifferentGameBoards() {
+        Game game = new Game(1, 20);
+        Game game2 = new Game(1, 20);
+
+        // Assume they're the same until proven wrong
+        boolean same = true;
+
+        // compare each row and check if they're different
+        for (int i = 0; i < 20; i++) {
+            if (!Arrays.equals(game.grid[i], game2.grid[i])) {
+                same = false;
+                break;
+            }
+        }
+
+        assertFalse(same);
+    }
+}
