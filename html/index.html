@@ -637,6 +637,11 @@
 				    
 				
 		    }
+			else if(username.length() > 10)
+			{
+				alert("Username is too long. Names have to be 10 or less characters");
+				sent_status = 0;
+			}
 		    else
 		    {
 		    	alert("Username already taken.");
