@@ -208,10 +208,14 @@ public class App extends WebSocketServer {
         	U.color = color.pickColor();
         	
         	//Add the person to the leaderboard
-        	leaderboard.add(U.Handle,0);
-        	
+        	if (!leaderboard.LB.containsKey(U.Handle))
+        	{
+        		leaderboard.add(U.Handle,0);
+        		Players.put(U.Handle,U);
+        	}
         	//Add it to all players list
-        	Players.put(U.Handle,U);
+        	
+        	
         	conn.setAttachment(U.Handle);
         	
 			if (Players.get(U.Handle).GameType == 2)

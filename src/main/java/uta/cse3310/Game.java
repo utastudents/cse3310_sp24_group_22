@@ -49,15 +49,6 @@ public class Game
         }
         
         
-        /*Random rand = new Random();
-
-        for (int i = 0; i < 20; i++) 
-        {
-            for (int j = 0; j < 20; j++) 
-            {
-                grid[i][j] = (char) (rand.nextInt(26) + 'A');
-            }
-        }*/
 
         return grid;
     }
