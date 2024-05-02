@@ -13,6 +13,10 @@ public class Create_Grid {
     public double density;
     public ArrayList<String> validWords;
     public ArrayList<String> selected_words;
+    public double calc_density;
+    public double horiz_density;
+    public double vert_density;
+    public double diag_density;
 
     public Create_Grid(int boardLength, int boardWidth, double density) {
         this.boardLength = boardLength;
