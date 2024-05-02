@@ -1,6 +1,10 @@
 package uta.cse3310;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+import java.util.Queue;
 
 public class Game 
 {
@@ -11,7 +15,8 @@ public class Game
 	//public char[] word;
 	public ArrayList<String> identified_words;
 	public ArrayList<String> valid_words;
-	
+	private Queue<Character> alphabet = new LinkedList<Character>();
+
 
     Game(int busy, int test_grid) 
     {
@@ -22,12 +27,26 @@ public class Game
 		
 		
 		identified_words = new ArrayList<>();
+
+		// Create alphabet and shuffle it so our
+		// filler letters aren't super obvious
+		List<Character> temporary = new ArrayList<Character>(26);
+		for (char c: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()) {
+			// alphabet.offer(c);
+			temporary.add(c);
+		}
+		Collections.shuffle(temporary);
+		for (char c: temporary) {
+			alphabet.offer(c);
+		}
+
+
 		grid = createGrid();
     }
 
 	char[][] createGrid() 
 	{
-		Random rand = new Random();
+		// Random rand = new Random();
 		Create_Grid create_grid = new Create_Grid(test_grid,test_grid,0.67);
         char[][] grid = new char[test_grid][test_grid];
         if (create_grid.initializeBoard("files.txt"))
@@ -42,7 +61,9 @@ public class Game
 	        {
 	            if (grid[i][j] == '#')
 	            {
-	            	grid[i][j] = (char) (rand.nextInt(26) + 'A');
+					grid[i][j] = alphabet.poll();
+					alphabet.offer(grid[i][j]);
+	            	// grid[i][j] = (char) (rand.nextInt(26) + 'A');
 	            }
 	        }
 		            	
