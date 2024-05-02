@@ -329,6 +329,7 @@
     	{
     		var commit = JSON.parse(event.data);
     		document.getElementById("commit").innerHTML = "Commit hash: "+commit;
+		document.title = commit;
     		times+=1;
     	}
     	else if (JSON.parse(event.data)==="approved")
