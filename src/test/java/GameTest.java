@@ -152,15 +152,17 @@ public class GameTest {
 
     @Test
     public void testReusingFillerChars() {
-        int max_value = 0;
-        int min_value = 0;
-
         // Use GameClient's version of create_grid 
         // to get a hashmap with <K: char, V: it's count>
         GameClient game = new GameClient(1, 20);
         game.test_grid = 20;
         char[][] grid = game.createGrid();
         Map<Character, Integer> letters = game.create_grid(game.grid);
+        
+        // Set to first item in list that way
+        // we get an actual comparison 
+        int min_value = letters.get('A');
+        int max_value = letters.get('A');
 
         // iterate over keys to find the 
         // most used letters and the least
@@ -177,11 +179,11 @@ public class GameTest {
         int difference = max_value - min_value;
         // uncomment to see counts of each letter
         // System.out.println(letters.entrySet());
+        // System.out.println(difference);
 
         // difference == 0: each letter was used the exact same amount of times
         // difference == 1: a letter has been reused
         assertTrue(difference == 1 || difference == 0);
-
     }
 
     @Test

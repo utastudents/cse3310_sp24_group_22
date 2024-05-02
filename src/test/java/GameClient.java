@@ -1,10 +1,19 @@
 package uta.cse3310;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Map;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
-public class GameClient
+import uta.cse3310.Coordinate;
+import uta.cse3310.Create_Grid;
+import uta.cse3310.Leaderboard;
+
+import java.util.Queue;
+
+public class GameClient 
 {
 	public int busy;
 	public int test_grid;
@@ -13,7 +22,8 @@ public class GameClient
 	//public char[] word;
 	public ArrayList<String> identified_words;
 	public ArrayList<String> valid_words;
-	
+	private Queue<Character> alphabet = new LinkedList<Character>();
+
 
     GameClient(int busy, int test_grid) 
     {
@@ -24,12 +34,26 @@ public class GameClient
 		
 		
 		identified_words = new ArrayList<>();
+
+		// Create alphabet and shuffle it so our
+		// filler letters aren't super obvious
+		List<Character> temporary = new ArrayList<Character>(26);
+		for (char c: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()) {
+			// alphabet.offer(c);
+			temporary.add(c);
+		}
+		Collections.shuffle(temporary);
+		
+		for (char c: temporary) {
+			alphabet.offer(c);
+		}
+
 		grid = createGrid();
     }
 
 	char[][] createGrid() 
 	{
-		Random rand = new Random();
+		// Random rand = new Random();
 		Create_Grid create_grid = new Create_Grid(test_grid,test_grid,0.67);
         char[][] grid = new char[test_grid][test_grid];
         if (create_grid.initializeBoard("files.txt"))
@@ -43,8 +67,8 @@ public class GameClient
 
 	/** Using this for testing filler chars */
 	Map<Character, Integer> create_grid(char[][] grid) {
-        Random rand = new Random();
-        Map<Character, Integer> alphabet = new HashMap<Character,Integer>();
+        // Random rand = new Random();
+        Map<Character, Integer> used_chars = new HashMap<Character,Integer>();
         char new_char;
         int old_value;
 		for (int i = 0; i < test_grid; i++) 
@@ -53,13 +77,14 @@ public class GameClient
 	        {
 	            if (grid[i][j] == '#')
 	            {
-                    new_char = (char) (rand.nextInt(26) + 'A');
-                    old_value = alphabet.getOrDefault(new_char, 0);
-	            	alphabet.put(new_char, old_value + 1);
+                    new_char = alphabet.poll();
+                    old_value = used_chars.getOrDefault(new_char, 0);
+	            	used_chars.put(new_char, old_value + 1);
+					alphabet.offer(new_char);
 	            }
 	        }
         }
-		return alphabet;
+		return used_chars;
 	}
     
     boolean isValidWord(ArrayList<Coordinate> indexLetters, String Userid, Leaderboard LB)
