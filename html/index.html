@@ -477,43 +477,44 @@
     	else if (receivedData.includes("Summary_list"))
     	{
     		summary = JSON.parse(event.data);
-    		//document.getElementById('Summary')
-    		var summaryDiv = document.getElementById('Summary');
  			for (var key in summary.Summary_list) 
 			{
-
 				if (key === username)
 				{
+					
+					//document.getElementById('Summary')
+					var summaryDiv = document.getElementById('Summary');
+
+
 					summaryDiv.textContent = "You " + summary.Summary_list[key];
+					
+					   		
+					var button1 = document.createElement("button");
+					button1.textContent = "Okay";
+					button1.id = "OKAY";
+					button1.addEventListener('click', okay);
+					summaryDiv.appendChild(button1);
+					
+					button1.style.display = "block";
+					button1.style.marginTop = "20px";
+					button1.style.fontSize = "20px";			
+											
+					summaryDiv.style.display = "block";
+					summaryDiv.style.position = "absolute";
+					summaryDiv.style.zIndex = "999";
+					summaryDiv.style.top = "50%";
+					summaryDiv.style.left = "50%";
+					summaryDiv.style.transform = "translate(-50%, -50%)";
+					summaryDiv.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+					summaryDiv.style.width = "800px"; // Adjust the width as needed
+					summaryDiv.style.height = "400px"; // Adjust the height as needed
+					summaryDiv.style.padding = "20px"; // Add padding to center the content
+					summaryDiv.style.textAlign = "center"; // Center the text horizontally
+					summaryDiv.style.borderRadius = "5px";
+					summaryDiv.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.3)";
+					summaryDiv.style.fontSize = "30px";
 				}
-
-    		}
-    		   		
-			var button1 = document.createElement("button");
-			button1.textContent = "Okay";
-			button1.id = "OKAY";
-			button1.addEventListener('click', okay);
-			summaryDiv.appendChild(button1);
-			
-			button1.style.display = "block";
-			button1.style.marginTop = "20px";
-			button1.style.fontSize = "20px";			
-									
-			summaryDiv.style.display = "block";
-			summaryDiv.style.position = "absolute";
-			summaryDiv.style.zIndex = "999";
-			summaryDiv.style.top = "50%";
-			summaryDiv.style.left = "50%";
-			summaryDiv.style.transform = "translate(-50%, -50%)";
-			summaryDiv.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
-			summaryDiv.style.width = "800px"; // Adjust the width as needed
-			summaryDiv.style.height = "400px"; // Adjust the height as needed
-			summaryDiv.style.padding = "20px"; // Add padding to center the content
-			summaryDiv.style.textAlign = "center"; // Center the text horizontally
-			summaryDiv.style.borderRadius = "5px";
-			summaryDiv.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.3)";
-			summaryDiv.style.fontSize = "30px";
-
+			}
     	}
 		else
 		{
@@ -743,7 +744,7 @@ function startGameTimer()
 {
     var threeMinutes = 60 * 3, // 3 minutes in seconds
         display = document.querySelector('#timer');
-    startTimer(threeMinutes, display);
+    startTimer(15, display);
 }
 
 function sendMessage()
